@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<html lang="" xml:lang="">
   <head>
     <title>Ch. 6: Comparing Two Means</title>
     <meta charset="utf-8" />
@@ -17,27 +17,27 @@ class: center, middle, inverse, title-slide
 
 
 
+
 # Navigation
 
-.pull-left[
-.large[By Date]
 
-- March 31: [start](#3) - [end](#15)
-- April 2: [start](#16) - [end](#31)
-- April 7: [start](#32) - [end](#49)
-
-]
-.pull-right[
 .large[By Section]
 - 6.1: [start](#3) - [end](#15)
 - 6.2: [start](#16) - [end](#36)
 - 6.3: [start](#37) - [end](#49)
-]
+
+???
+
+In Chapter 3, we learned how to handle quantitative data, tests, and intervals for a single mean. In Chapter 5, we started talking about what to do when there are 2 variables, but we were working with proportions. So, in Chapter 6, the next logical thing is to talk about what to do with 2 variables, where one of them is categorical and the other is quantitative. 
 
 ---
 class:inverse,middle,center
 # 6.1: Comparing Two Groups
 ## Quantitative Response
+
+???
+
+And just as in Chapter 5, where we first talked about how to display data with 2 variables using a segmented bar chart, we're going to spend section 6.1 on how to describe and visualize data where one of the variables is categorical and the other is quantitative. 
 
 ---
 ## Describing Distributions of Quantitative Data
@@ -52,6 +52,11 @@ class:inverse,middle,center
   
 &lt;img src="chapter-6-two-means_files/figure-html/unnamed-chunk-1-1.png" width="80%" style="display: block; margin: auto;" /&gt;
 
+???
+
+One way we would describe a distribution of continuous data is to use what is called a 5-number summary. This is basically a set of numbers that describe the full spread of the data: the minimum (lowest observation), the lower quartile, the median (50% through the data), the upper quartile, and the maximum (highest observation).
+
+
 ---
 ## Describing Distributions of Quantitative Data
 
@@ -65,6 +70,17 @@ class:inverse,middle,center
   
 &lt;img src="chapter-6-two-means_files/figure-html/unnamed-chunk-2-1.png" width="80%" style="display: block; margin: auto;" /&gt;
 
+???
+
+
+The quartiles are a bit unfamiliar, though. 
+
+With the median, we look for the point such that 50% of the data is below and 50% is above. You can think of the lower quartile as the median of the bottom half of the data: It is the point such that 25% of the data is below and 75% of the data is above.
+
+Similarly, the upper quartile is the point where 75% of the data is below and 25% of the data is above. 
+
+If you have `\(n\)` observations, you can count `\(n/4\)` from the bottom, `\(n/2\)` , and `\(3n/4\)` to get the lower quartile, median, and upper quartile (roughly). If you have a fractional value, average the two observations you're between.
+
 
 ---
 ## Describing Distributions of Quantitative Data
@@ -76,6 +92,10 @@ The distance between the two quartiles is called the **inter-quartile range**(IQ
 
 The IQR is resistant (or *robust*) to extreme values and skewness, unlike the standard deviation.
 
+???
+
+The distance between the 25th and 75th percentiles (or the lower and upper quartiles) gives a rough measure of the spread of the distribution, without being affected by outliers. So for a skewed distribution, the standard deviation will be really affected by an extreme outlier, but the IQR won't change at all. 
+
 ---
 ## Describing Distributions of Quantitative Data
 
@@ -85,6 +105,17 @@ A **boxplot** (or box-and-whisker plot) is a visual display of the 5-number summ
     - smallest and largest values in the dataset 
     - OR the values in the dataset that are within 1.5\*IQR away from the edges of the box. 
         - Observations outside of the 1.5\*IQR range may be shown as dots and are outliers
+
+
+
+???
+
+A boxplot is one way to summarize a full distribution visually, using the 5-number summary. It's easy to draw/sketch, and doesn't require as much tediousness as drawing a histogram or dotplot by hand. 
+
+There are a couple of variations, but in both, the "box" covers the middle 50% of the data, with a line through the box for the median.
+
+Extending out from the box are the "whiskers". You can make boxplots with whiskers that extend to the lowest and highest values - a direct representation of the 5 number summary. But often, a more useful representation is to make the whiskers extend to the lowest observation or 1.5 * IQR from the edges of the box. This allows us to visually highlight the outliers, which are shown as dots if they fall outside of the 1.5IQR range outside of the box.
+
 
 
 
@@ -102,6 +133,11 @@ What are the following values?
 
 Are there any outliers?
 
+
+???
+
+Let's make a boxplot for our data here. First, we'll do the easy stuff - the quartiles and median.
+
 ---
 ## Describing Distributions of Quantitative Data
 
@@ -115,6 +151,13 @@ What are the following values?
 - top whisker:
 
 Are there any outliers?
+
+???
+
+
+Then, we'll calculate the IQR: 12 - 7 = 5. 
+
+1.5 * IQR is 7.5
 
 ---
 ## Describing Distributions of Quantitative Data
@@ -130,6 +173,15 @@ Are there any outliers?
 
 Are there any outliers?
 
+???
+
+
+Subtract the IQR from the lower quartile
+
+Add it to the upper quartile
+
+Take the least extreme value that exists in the data. 
+
 ---
 ## Describing Distributions of Quantitative Data
 
@@ -144,12 +196,22 @@ What are the following values?
 
 Are there any outliers? .red[Yes, at 21]
 
+???
+
+The top whisker extends from 12 to 19.5, but there is a single point beyond that --- that point is an outlier. Outliers are extreme points that sometimes represent rare occurrences and sometimes indicate data recording errors and other data quality issues - it depends on the field, and how extreme the outlier is. 
+
 
 ---
 ## Describing Distributions of Quantitative Data
 
 Boxplots make it easy to compare distributions of different groups.
 &lt;img src="chapter-6-two-means_files/figure-html/unnamed-chunk-9-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+???
+
+Using boxplots, we can compare distributions - for instance, we can say that there are usually fewer cases of measles than any other reportable illness in California, but there have been a couple of years where there were unusually large numbers of measles cases. 
+
+We can see that the distribution of mumps cases is highly skewed - the median is very close to the lower quartile, and the lowest observation is not much lower than the quartile. So most years, we have 75 or so cases of mumps in California, but... in the other years, if we have more than 75 cases, we may have a lot more than 75 cases. That's what a skewed distribution looks like. 
 
 ---
 ## In-Class Practice: Jean Pocket Sizes
@@ -160,6 +222,16 @@ Using the graph paper on the next page, create boxplots for each of the dimensio
 
 .bottom[Data source: https://pudding.cool/2018/08/pockets/]
 
+???
+
+I was pretty proud of this exercise... and then class got cancelled. So I'd appreciate it if you'd follow along and pretend that it's a cool example. 
+
+Someone went through and measured the pocket sizes in jeans for men and women. They measured several dimensions, but we're going to work with the height and width. 
+
+You have all of the data here; practice creating boxplots for each men's dimension and women's dimension. 
+
+When you're done, take a look at the Example 6.1 video in Box, where I work through this problem. I had to record that one on my tablet, so it's a good enough excuse to give you a chance to try things out yourself.
+
 ---
 ## In-Class Practice: Jean Pocket Sizes
 
@@ -167,10 +239,14 @@ Using the graph paper on the next page, create boxplots for each of the dimensio
 
 What do you conclude about the distributions of front pocket maximum dimensions when comparing Men's jeans to Women's jeans?
 
+???
+
+
+
 ---
 ## Exploration 6.1: Haircut Prices
 
-Work through Exploration 6.1A in groups. Upload your answers; you must complete at least 1-13. 
+Work through Exploration 6.1A. Upload your answers; you must complete at least 1-13. 
 
 If you complete 14-19, you may get extra credit.
 
