@@ -30,14 +30,14 @@ if (params$key) {
 
 # Netflix
 
-Netflix (and many other internet companies) are constantly running experiments designed to provide information about their users' preferences. In one experiment design type, they record typical user interactions with the product and then randomly change the interface: for instance, changing the order of the categories on the Netflix home screen. Netflix decides to test out the length of time an individual watches content continuously under two conditions: the regular recommendation algorithm, A, and a new recommendation algorithm, B. Over the course of two nights, Netflix selects 600 users from their user pool and randomly assigns 300 of them to algorithm B on night 1 and algorithm A on night 2. The remaining 300 are assigned to algorithm A on night 1 and B on night 2. Netflix records the difference in minutes of continuous watch time under B compared to A (B-A). 
+Netflix (and many other internet companies) are constantly running experiments designed to provide information about their users' preferences. In one experiment design type, they record typical user interactions with the product and then randomly change the interface: for instance, changing the order of the categories on the Netflix home screen. Netflix decides to test out the length of time an individual watches more content under two conditions: the regular recommendation algorithm, A, and a new recommendation algorithm, B. Netflix selects 600 users from their user pool to participate in the study. Users are assigned to see recommendations from A on one night, and recommendations from B on the other night, with the order (AB or BA) assigned randomly so that order effects are not an issue. Netflix records the difference in minutes of watch time under algorithm B compared to algorithm A (B-A). 
 
 ```{r, fig.width = 8, fig.height = 4}
 set.seed(202003221)
-x <- rnorm(600, mean = 10, sd = 10)
+x <- rnorm(600, mean = 2, sd = 8)
 ggplot() + 
   geom_histogram(aes(x = x), fill = "grey", color = "black") + 
-  annotate("text", x = Inf, y = Inf, label = sprintf("Mean (B-A): %0.2f\nSD (B-A): %0.2f", mean(x), sd(x)), hjust = 1.1, vjust = 1.1) + 
+  annotate("text", x = Inf, y = Inf, label = sprintf("Mean (B-A): %0.3f\nSD (B-A): %0.3f", mean(x), sd(x)), hjust = 1.1, vjust = 1.1) + 
   ylab("# Viewers") + xlab("Increase in Minutes Watched w/ B over A")
 ```
 
@@ -45,10 +45,43 @@ ggplot() +
 \longanswer\answer{The explanatory variable is whether recommendation algorithm A or B was used. The response variable is the number of minutes of continuous TV watching.}
 
 2. In symbols and words, what is the population parameter? The sample statistic? Do you know the value of either quantity?      
-\longanswer\answer{The population parameter, $\mu_{B-A}$ is the average increase in continuous watch time with algorithm B compared to algorithm A for all Netflix viewers. The sample statistic, $\overline x_{B-A}$ is the sample mean difference in continuous watch time under algorithm B compared to algorithm A. $\overline x_{B-A} = `r mean(x)`$, while we do not know the population parameter value.}
+\longanswer[6em]\answer{The population parameter, $\mu_D$ is the average increase in watch time with algorithm B compared to algorithm A for all Netflix viewers. The sample statistic, $\overline x_D$ is the sample mean difference in continuous watch time under algorithm B compared to algorithm A. $\overline x_D = `r mean(x)`$, while we do not know the population parameter value.}
 
-3. What are the null and alternative hypotheses, in symbols and in words?    
-\longanswer[6em]\answer{The null hypothesis is that recommendation algorithms A and B are the same. The alternative hypothesis is that recommendation algorithm B is better than recommendation algorithm A. In symbols, this is $H_0: \mu_{B-A} = 0$ and $H_A: \mu_{B-A} > 0$.}
+3. Is this design a matched-pairs study or a repeated measures study?    
+\longanswer\answer{This is a repeated measures study - Netflix is sequentially measuring one person (or account) over two separate nights.}
 
-4. Why is this study design more informative than a similar study with an unpaired design, where Netflix selects 1200 viewers randomly, such that 600 people use recommendation algorithm A and 600 people use recommendation algorithm B?    
-\longanswer[6em]\answer{There is additional variability in the unpaired design study, because the two groups are made up of different people. The mean difference may be the same, but by reducing the variability and using a paired design, we have a better ability to detect that difference.}
+4. What are the null and alternative hypotheses, in symbols and in words?    
+\longanswer[8em]\answer{The null hypothesis is that recommendation algorithms A and B are the same. The alternative hypothesis is that recommendation algorithm B is better than recommendation algorithm A. In symbols, this is $H_0: \mu_D = 0$ and $H_A: \mu_D > 0$.}
+
+5. Why is this study design more informative than a similar study with an unpaired design, where Netflix selects 1200 viewers randomly, such that 600 people use recommendation algorithm A and 600 people use recommendation algorithm B?    
+\longanswer[8em]\answer{There is additional variability in the unpaired design study, because the two groups are made up of different people. The mean difference may be the same, but by reducing the variability and using a paired design, we have a better ability to detect that difference because each person serves as their own control.}
+
+6. Describe how you would conduct a physical simulation-based test of the hypothesis, if you only had the 600 differences (B-A) for each individual.    
+\longanswer[10em]\answer{To conduct a simulation using the 600 differences, we would ideally want to randomly assign A and B labels to each observation. As we have differences, this is equivalent to randomly multiplying each observation by -1 or +1, flipping the order of the difference (multiplying by -1 is the calculation A-B, which is equivalent to flipping the labels). So by flipping a coin 600 times and multiplying any observation corresponding to a heads coin flip by -1, we can conduct a simulation study using the differences.}
+
+7. On average, the sample of 600 people watched `r mean(x)` minutes more TV when recommendation algorithm B is used (SD = `r sd(x)`). Calculate the theory-based standardized statistic.    
+\longanswer\answer{$t = \displaystyle\frac{\mu_D - 0}{s_D/\sqrt{n}} = \displaystyle\frac{`r mean(x)`}{`r sd(x)`/\sqrt{600}} = \displaystyle\frac{`r mean(x)`}{`r sd(x)/sqrt(length(x))`} = `r mean(x)/(sd(x)/sqrt(length(x)))`$}
+
+8. Interpret this standardized statistic in the context of the problem. What can Netflix conclude?    
+\longanswer[6em]\answer{With $t = `r mean(x)/(sd(x)/sqrt(length(x)))`$, Netflix has very strong evidence against the null hypothesis that the two algorithms perform the same. Netflix should reject the null hypothesis and conclude that recommendation algorithm B results in users watching more content. }
+
+
+
+# Case-control studies
+
+From Wikipedia, the source of all knowledge: 
+
+> A case–control study is a type of observational study in which two existing groups differing in outcome are identified and compared on the basis of some supposed causal attribute. Case–control studies are often used to identify factors that may contribute to a medical condition by comparing subjects who have that condition/disease (the "cases") with patients who do not have the condition/disease but are otherwise similar (the "controls").
+
+Suppose you are interested in investigating whether there is a relationship between paid family leave policies and development of maternal post-partum depression (depression which develops within the first 12 months after a birth). You do not have the funds to do a randomized experiment (paying for leave for all participants in the treatment group), so you instead plan a case-control study. You will measure symptoms of post-partum depression (PPD) at 12 months postpartum using a quantitative scale, where higher scores indicate more severe PPD symptoms. 
+
+1. When designing your control, what factors might be important?    
+\longanswer[6em]\answer{length of leave time, family support, socioeconomic status, type of birth (vaginal/cesarian), whether or not the birth was full-term (at least 38 weeks of pregnancy), breast or formula feeding, employment status post-birth, type of job (industry, office work, medical, retail). }
+
+2. You control for all of the factors you listed above, and manage to identify 40 pairs of women, where each pair consists of a woman with 12 weeks of unpaid leave and a woman with 12 weeks of paid leave. Each pair of women are otherwise similar with regard to the factors you identified. In words and symbols, list the population parameter and sample statistic you are interested in.    
+\longanswer[12em]\answer{We are interested in the average pairwise difference in postpartum depression symptoms between those with unpaid leave and those with paid leave. Mathematically, in each of the 40 pairs, $i$, if $x_{ip}$ is the PPD score for the woman with paid leave, and $x_{iu}$ is the PPD score for the woman with unpaid leave, then we are interested in the sample statistic $\overline x_D = \frac{1}{n} \sum_i x_{iu}- x_{ip}$. The corresponding population parameter is $\mu_D$, the population average difference in PPD symptoms for unpaid vs. paid leave.}
+
+3. What are the null and alternative hypotheses?    
+\longanswer\answer{$H_0: \mu_D = 0$, that is, family leave policies are not associated with a difference in PPD scores. $H_A: \mu_D \neq 0$, that is, family leave policies are associated with a difference in PPD scores. You could also use $H_A:\mu_D > 0$, corresponding to an association between paid family leave and lower PPD scores. }
+
+
