@@ -360,6 +360,10 @@ If you complete 14-19, you may get extra credit.
 class:middle,inverse,center
 ## 6.2: Comparing Two Means: Simulation Based Approach
 
+???
+
+Welcome to chapter 6.2, where we'll be talking about the simulation based approach to comparing two group means.
+
 ---
 ## 3S strategy
 
@@ -374,6 +378,14 @@ Our hypotheses are going to concern $\mu_1$ and $\mu_2$... specifically, the val
 We are interested in the long run (e.g. data collected forever) value of the difference between the group means
 
 $\begin{align}H_0&: \mu_1 - \mu_2 = 0\\H_A&: \mu_1 - \mu_2 \;\{\neq,>,< \} \;0\end{align}$
+
+???
+
+Let's start by reviewing our 3S strategy: First, we calculate a statistic, then we conduct a simulation, and finally, we evaluate the strength of our evidence.
+
+In Chapter 6.2, we're working with $\mu_1$ and $\mu_2$. As with Chapter 5, what we care about in Chapter 6 is the value of the true difference in group means (or the long-run distance). 
+
+By default, we'll assume our group means are the same - that is, our null hypothesis is generally going to be that $\mu_1 = \mu_2$, or, equivalently, that $\mu_1 - \mu_2 = 0$. Our alternative hypothesis is going to be some variation on "the group means aren't the same" - either greater than, less than, or not equal to, depending on the problem.
 
 ---
 ## Simulation 
@@ -391,15 +403,29 @@ Assign new group labels to existing values
 
 Think about sorting labeled index cards into stacks for each group.
 
+???
+
+To simulate this, we'll take all of our values and assign them new group labels. If the groups are the same, then shuffling the labels will make no difference in our statistic's value, right?
+
+
 ---
 ## Simulation 
 
 ![Simulation setup - index cards](figure/two-groups-simulation-start.png)
 
+???
+
+
+Let's imagine that we have observations on two different colors of index cards. We compute the average value of each group, and then subtract them to get our sample statistic.
+
 ---
 ## Simulation 
 
 ![Simulation round 1 - index cards](figure/two-groups-simulation-1.png)
+
+???
+
+In a simulation, we'll shuffle the two sets of cards together and then deal them back out so that there are the right number of cards in each stack. The cards are still colored by their original group, but we've assigned new group labels - stack 1 and stack 2. We compute the mean of all the values in each stack, subtract those, and get a simulated statistic.
 
 
 ---
@@ -407,6 +433,9 @@ Think about sorting labeled index cards into stacks for each group.
 
 ![Simulation setup - index cards](figure/two-groups-simulation-2.png) 
 
+???
+
+Then we shuffle again, average each stack again, and get another simulated statistic.
 
 ---
 ## Simulation 
@@ -414,6 +443,10 @@ Think about sorting labeled index cards into stacks for each group.
 ![Simulation setup - index cards](figure/two-groups-simulation-3.png)
 
 At each simulation, we recalculate our statistic - e.g. $\overline x_1 - \overline x_2$
+
+???
+
+Each time we conduct a new trial, we're simulating an entire experiment - we're assigning groups to outcome values.
 
 ---
 ## Simulation
@@ -423,6 +456,11 @@ Null hypothesis: Mean .underline[.hidden[measurement]] is the same in both group
 One repetition: Rerandomizing groups for each .underline[.hidden[measurement]]
 
 Statistic: Difference in two group means
+
+???
+
+To recap, our null hypothesis is that the mean is the same in both groups. One repetition consists of rerandomizing groups for each measurement, and we calculate the difference in the two simulated group means.
+
 
 ---
 ## Simulation
@@ -450,6 +488,16 @@ ggplot(apnea, aes(x = difference, fill = color)) + geom_dotplot() + facet_grid(g
   theme(axis.text.y = element_blank(), axis.title.y = element_blank(), axis.ticks.y = element_blank())
 ```
 
+???
+
+This is an example from the book, but who doesn't like to say didgeridoo?
+
+Evidently, some scientist got a didgeridoo and started taking lessons, and found that his sleep apnea improved. He was intrigued, so he set up a study with 25 individuals, randomly assigning 14 to receive didgeridoo lessons while 11 presumably found other hobbies.
+
+The difference in sleep apnea scores over the 8 week period was recorded for each individual. 
+
+Our groups are treatment/control (lessons or not), our response variable is the difference in sleep apnea scores after 8 weeks.
+
 ---
 ## Example - Didgeridoo playing and sleep apnea
 
@@ -462,11 +510,17 @@ In words:
 
 Because there is random assignment, if we conclude $H_A$, we can say the change is due to the Didgeridoo lessons.
 
+???
+
+Setting up our null hypothesis, we define mu D to be the didgeridoo group, and mu C to be the control group. We start out with the assumption that they're equal - there is no effect of didgeridoo lessons, and any group differences are due to random chance alone.
+
+Our alternative hypothesis is that didgeridoo lessons do actually matter and result in a larger change in sleep apnea scores.
+
 
 ---
 ## Example - Didgeridoo playing and sleep apnea
 
-```{r fig.width=8, fig.height=4, message = F, warning = F,  ffmpeg.format='gif', fig.show='animate', dev = "jpeg", dpi = 300}
+```{r fig.width=8, fig.height=4, message = F, warning = F,  ffmpeg.format='gif', fig.show='animate', dev = "jpeg", dpi = 300, interval=.2, aniopts = "controls"}
 set.seed(240997823)
 actual <- apnea %>% group_by(group) %>% summarize(difference = mean(difference))
 res <- tibble(i = 1:100, mean_diff = 0)
@@ -495,6 +549,14 @@ for (i in 1:100) {
 
 During each simulation, the group labels are shuffled and the difference in the means is calculated. The resulting simulation statistic distribution is used to calculate the p-value.
 
+???
+
+This animation shows the accumulation of 100 simulations using this data. On the left, you can see the "assigned" groups - the different plots; the points are separated out by their original group membership as well using color. 
+
+In the 100 simulation trials we see here, there were no trials that randomly showed a value as extreme as what we observed.
+
+We can't say our p-value is 0 because we haven't run enough simulations, but we can say that p is less than 0.01. 
+
 ---
 ## Example - Didgeridoo playing and sleep apnea
 
@@ -514,6 +576,10 @@ ggplot() +
 
 Interpretation: 
 
+???
+
+We'd interpret this in the same way that we interpreted any other p-value: With p<0.01, we have very strong evidence against the null hypothesis that the two groups are equal. We reject the null and conclude that Didgeridoo lessons cause sleep apnea scores to decrease relative to a control group. There is evidence that didgeridoo lessons reduce symptoms of sleep apnea.
+
 --
 
 .red[
@@ -524,7 +590,9 @@ With p < 0.01, we have very strong evidence against the null hypothesis that the
 ---
 ## Exploration 6.2
 
-Complete Exploration 6.2, questions 1 - 15 in your groups.
+Complete Exploration 6.2, questions 1 - 15. Upload your results to Canvas. 
+
+You may work in groups if you wish, just put everyone's name on the assignment and only turn it in once.
 
 
 ---
