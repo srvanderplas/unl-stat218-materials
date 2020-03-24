@@ -1,0 +1,54 @@
+---
+title: "Chapter 7 Scenarios"
+output: 
+  pdf_document:
+    template: template.tex
+geometry: margin=1in,headsep=.2in
+params:
+  key: true
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F, message = F, warning = F)
+library(tidyverse)
+options(digits = 3)
+```
+
+```{r fix-latex, results='asis', echo = F, message = F}
+if (params$key) {
+  cat("\\newcommand{\\answer}[1]{{\\large\\color{red}\\emph{#1}}}")
+  cat("\\providecommand{\\tightlist}{\\setlength{\\itemsep}{1em}\\setlength{\\parskip}{0pt}}")
+  cat("\\chead{\\color{red}{KEY}}")
+} else {
+  # cat("\\newcommand{\\answer}[1]{{\\color{white}#1}}") 
+  cat("\\newcommand{\\answer}[1]{{\\leavevmode\\protect\\phantom{\\large #1}}}")
+  cat("\\providecommand{\\tightlist}{\\setlength{\\itemsep}{1em}\\setlength{\\parskip}{0pt}}")
+}
+
+``` 
+
+# Netflix
+
+Netflix (and many other internet companies) are constantly running experiments designed to provide information about their users' preferences. In one experiment design type, they record typical user interactions with the product and then randomly change the interface: for instance, changing the order of the categories on the Netflix home screen. Netflix decides to test out the length of time an individual watches content continuously under two conditions: the regular recommendation algorithm, A, and a new recommendation algorithm, B. Over the course of two nights, Netflix selects 600 users from their user pool and randomly assigns 300 of them to algorithm B on night 1 and algorithm A on night 2. The remaining 300 are assigned to algorithm A on night 1 and B on night 2. Netflix records the difference in minutes of continuous watch time under B compared to A (B-A). 
+
+```{r, fig.width = 8, fig.height = 4}
+set.seed(202003221)
+x <- rnorm(600, mean = 10, sd = 10)
+ggplot() + 
+  geom_histogram(aes(x = x), fill = "grey", color = "black") + 
+  annotate("text", x = Inf, y = Inf, label = sprintf("Mean (B-A): %0.2f\nSD (B-A): %0.2f", mean(x), sd(x)), hjust = 1.1, vjust = 1.1) + 
+  ylab("# Viewers") + xlab("Increase in Minutes Watched w/ B over A")
+```
+
+1. What is the explanatory variable? What is the response variable?    
+\longanswer\answer{The explanatory variable is whether recommendation algorithm A or B was used. The response variable is the number of minutes of continuous TV watching.}
+
+2. In symbols and words, what is the population parameter? The sample statistic? Do you know the value of either quantity?      
+\longanswer\answer{The population parameter, $\mu_{B-A}$ is the average increase in continuous watch time with algorithm B compared to algorithm A for all Netflix viewers. The sample statistic, $\overline x_{B-A}$ is the sample mean difference in continuous watch time under algorithm B compared to algorithm A. $\overline x_{B-A} = `r mean(x)`$, while we do not know the population parameter value.}
+
+3. What are the null and alternative hypotheses, in symbols and in words?    
+\longanswer[6em]\answer{The null hypothesis is that recommendation algorithms A and B are the same. The alternative hypothesis is that recommendation algorithm B is better than recommendation algorithm A. In symbols, this is $H_0: \mu_{B-A} = 0$ and $H_A: \mu_{B-A} > 0$.}
+
+4. Why is this study design more informative than a similar study with an unpaired design, where Netflix selects 1200 viewers randomly, such that 600 people use recommendation algorithm A and 600 people use recommendation algorithm B?    
+\longanswer[6em]\answer{There is additional variability in the unpaired design study, because the two groups are made up of different people. The mean difference may be the same, but by reducing the variability and using a paired design, we have a better ability to detect that difference.}
