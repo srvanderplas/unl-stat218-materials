@@ -48,7 +48,7 @@ ggplot() +
 \longanswer[6em]\answer{The population parameter, $\mu_D$ is the average increase in watch time with algorithm B compared to algorithm A for all Netflix viewers. The sample statistic, $\overline x_D$ is the sample mean difference in continuous watch time under algorithm B compared to algorithm A. $\overline x_D = `r mean(x)`$, while we do not know the population parameter value.}
 
 3. Is this design a matched-pairs study or a repeated measures study?    
-\longanswer\answer{This is a repeated measures study - Netflix is sequentially measuring one person (or account) over two separate nights.}
+\longanswer\answer{This is a repeated measures study - Netflix is sequentially measuring one person (or account) over two separate nights.}\clearpage
 
 4. What are the null and alternative hypotheses, in symbols and in words?    
 \longanswer[8em]\answer{The null hypothesis is that recommendation algorithms A and B are the same. The alternative hypothesis is that recommendation algorithm B is better than recommendation algorithm A. In symbols, this is $H_0: \mu_D = 0$ and $H_A: \mu_D > 0$.}
@@ -66,7 +66,7 @@ ggplot() +
 \longanswer[6em]\answer{With $t = `r mean(x)/(sd(x)/sqrt(length(x)))`$, Netflix has very strong evidence against the null hypothesis that the two algorithms perform the same. Netflix should reject the null hypothesis and conclude that recommendation algorithm B results in users watching more content. }
 
 
-
+\clearpage
 # Case-control studies
 
 From Wikipedia, the source of all knowledge: 
@@ -79,9 +79,15 @@ Suppose you are interested in investigating whether there is a relationship betw
 \longanswer[6em]\answer{length of leave time, family support, socioeconomic status, type of birth (vaginal/cesarian), whether or not the birth was full-term (at least 38 weeks of pregnancy), breast or formula feeding, employment status post-birth, type of job (industry, office work, medical, retail). }
 
 2. You control for all of the factors you listed above, and manage to identify 40 pairs of women, where each pair consists of a woman with 12 weeks of unpaid leave and a woman with 12 weeks of paid leave. Each pair of women are otherwise similar with regard to the factors you identified. In words and symbols, list the population parameter and sample statistic you are interested in.    
-\longanswer[12em]\answer{We are interested in the average pairwise difference in postpartum depression symptoms between those with unpaid leave and those with paid leave. Mathematically, in each of the 40 pairs, $i$, if $x_{ip}$ is the PPD score for the woman with paid leave, and $x_{iu}$ is the PPD score for the woman with unpaid leave, then we are interested in the sample statistic $\overline x_D = \frac{1}{n} \sum_i x_{iu}- x_{ip}$. The corresponding population parameter is $\mu_D$, the population average difference in PPD symptoms for unpaid vs. paid leave.}
+\longanswer[9em]\answer{We are interested in the average pairwise difference in postpartum depression symptoms between those with unpaid leave and those with paid leave. Mathematically, in each of the 40 pairs, $i$, if $x_{ip}$ is the PPD score for the woman with paid leave, and $x_{iu}$ is the PPD score for the woman with unpaid leave, then we are interested in the sample statistic $\overline x_D = \frac{1}{n} \sum_i x_{iu}- x_{ip}$. The corresponding population parameter is $\mu_D$, the population average difference in PPD symptoms for unpaid vs. paid leave.}
 
 3. What are the null and alternative hypotheses?    
-\longanswer\answer{$H_0: \mu_D = 0$, that is, family leave policies are not associated with a difference in PPD scores. $H_A: \mu_D \neq 0$, that is, family leave policies are associated with a difference in PPD scores. You could also use $H_A:\mu_D > 0$, corresponding to an association between paid family leave and lower PPD scores. }
+\longanswer[6em]\answer{$H_0: \mu_D = 0$, that is, family leave policies are not associated with a difference in PPD scores. $H_A: \mu_D \neq 0$, that is, family leave policies are associated with a difference in PPD scores. You could also use $H_A:\mu_D > 0$, corresponding to an association between paid family leave and lower PPD scores. }\clearpage
 
-
+4. You create a 95% confidence interval for the value of $\mu_D$, (2.6, 8.3). 
+    - What was the sample statistic? How do you know?    
+      \longanswer\answer{The original estimate was 5.45; it is the midpoint of the interval. $\frac{8.3 - 2.6}{2} + 2.6 = 5.45$}
+    - What was the sample standard deviation of the pairwise differences? How do you know?    
+      \longanswer[6em]\answer{$\frac{8.3 - 2.6}{2} = 2.85$ is the width of the interval. If we divide that by the multiplier (2) we get $s/\sqrt{n}$. So $\frac{2.85}{2} = s/\sqrt{40}$ and $\frac{2.85\sqrt{40}}{2} = 9.01$ was the sample standard deviation.}
+    - Interpret the confidence interval in the context of the problem.    
+      \longanswer[6em]\answer{We are 95\% confident that the average difference in PPD scores between women with unpaid leave and women with paid leave is between 2.6 and 8.3. There is a statistically significant association between unpaid leave policies and an increase in PPD scores at 12 months postpartum.}
