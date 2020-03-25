@@ -599,10 +599,14 @@ You may work in groups if you wish, just put everyone's name on the assignment a
 class:center,middle,inverse
 ## 6.3: Comparing Two Means: Theory-Based Approach
 
+???
+
+In Chapter 6.2, we talked about how to simulate studies comparing two means; in Chapter 6.3 we'll talk about a theory-based approach. I'll start with an example, but be on the lookout - with any theory based approach, we need two things (generally speaking) - validity conditions, and a formula for the standard error.
+
 ---
 ## Example 6.3: Breastfeeding and Intelligence
 
-An article published in the journal Pediatrics (1999) studied whether and how children who were breastfed during infancy differed from those who werent breastfed. The study involved 323 white children recruited at birth in 1980-1981 from four Western Michigan Hospitals. After some initial exploration, the researchers deemed the participants in the study were representative of the community in terms of social class, maternal education, age, marital status, and sex of infant.
+An article published in the journal Pediatrics (1999) studied whether and how children who were breastfed during infancy differed from those who weren't breastfed on an intelligence test. The study involved 323 white children recruited at birth in 1980-1981 from four Western Michigan Hospitals. After some initial exploration, the researchers deemed the participants in the study were representative of the community in terms of social class, maternal education, age, marital status, and sex of infant.
 
 - Is this an experiment or an observational study? .hidden[Investigators did not assign treatments (breastfeeding/not) to infants]
 
@@ -612,10 +616,28 @@ An article published in the journal Pediatrics (1999) studied whether and how ch
 
 - Can we make causal conclusions (e.g. breastfeeding causes increased intelligence) .hidden[No, we can't make causal conclusions, because there was no random assignment of treatments to observational units]
 
+???
+
+There are many, many studies examining the long-term effects of breastfeeding and formula feeding on factors later in life: asthma rates, intelligence, gut bacteria levels, obesity rates.
+
+In this study, researchers recruited mother-infant pairs from 4 western Michigan hospitals, and, one assumes due to the demographic limitations, this study involved only white infants born in 1980 or 1981. The researchers determined after collecting the data that certain demographic variables from their sample were representative of the community.
+
+On your own, think through the following questions, before I give you the answers. If it helps, pretend I'm staring you down.
+
+Is this an experiment or an observational study?
+
+Did the researchers use a random sample?
+
+Is their sample representative?
+
+Can we draw any causal conclusions from the study?
+
+
 ---
 ## Example 6.3: Breastfeeding and Intelligence
 
-An article published in the journal Pediatrics (1999) studied whether and how children who were breastfed during infancy differed from those who weren't breastfed. The study involved 323 white children recruited at birth in 1980-1981 from four Western Michigan Hospitals. After some initial exploration, the researchers deemed the participants in the study were representative of the community in terms of social class, maternal education, age, marital status, and sex of infant.
+An article published in the journal Pediatrics (1999) studied whether and how children who were breastfed during infancy differed from those who weren't breastfed on an intelligence test. The study involved 323 white children recruited at birth in 1980-1981 from four Western Michigan Hospitals. After some initial exploration, the researchers deemed the participants in the study were representative of the community in terms of social class, maternal education, age, marital status, and sex of infant.
+
 
 - Is this ~~an experiment~~ or an observational study? .red[Investigators did not assign treatments (breastfeeding/not) to infants]
 
@@ -625,6 +647,17 @@ An article published in the journal Pediatrics (1999) studied whether and how ch
 
 - Can we make causal conclusions (e.g. breastfeeding causes increased intelligence) .red[No, we can't make causal conclusions, because there was no random assignment of treatments to observational units]
 
+???
+
+This is an observational study, because investigators did not assign treatments (breastfeeding/formula feeding) to infants. It would be unethical to do so, and impractical as well, since not all mothers can breastfeed successfully, and not all infants tolerate formula due to allergies, reflux, and other issues. 
+It's very hard to do experiments on infants... ethical considerations get in the way.
+
+We don't have random assignment (because we're not assigning treatment to groups), but we also don't have a random sample. Mothers and infants were recruited from 4 hospitals, but their participation was voluntary (again, pesky ethics). So this isn't a random sample either.
+
+It is possible that it is a represenative sample of the local population, if you trust the researcher assessment of the demographics of the region, and we don't try to generalize to groups other than white infants in western michigan. It's probably not something that would pass muster if researchers tried to generalize to all infants in the US, or infants worldwide. There are too many other cultural, racial, medical, and environmental factors.
+
+Because this isn't an experiment, we can't make any causal conclusions. All we might be able to say is that there is an association between feeding method and intelligence.
+
 
 ---
 ## Example 6.3: Breastfeeding and Intelligence
@@ -633,7 +666,11 @@ The researchers followed up with the children at age 4, assessing their abilitie
 
 What should the researchers use as their hypotheses, in words?
 
+???
 
+It's hard to give babies intelligence tests - they're nonverbal, squirmy, have no attention span... so the researchers waited until the kids were 4 and then assessed their intelligence and whether or not the child was breastfed.
+
+What are the appropriate hypotheses in words?
 
 ---
 ## Example 6.3: Breastfeeding and Intelligence
@@ -646,7 +683,11 @@ What should the researchers use as their hypotheses, in words?
 
 .red[Alt: There is an association between breastfeeding during infancy and GCI at age 4.]
 
+???
 
+The null hypothesis is that there is no association between breastfeeding in infancy and score on the GCI at age 4.
+
+The alternative hypothesis is that there is an association between the two variables.
 
 ---
 ## Example 6.3: Breastfeeding and Intelligence
@@ -655,6 +696,9 @@ The researchers followed up with the children at age 4, assessing their abilitie
 
 What are the hypotheses in symbols?
 
+???
+
+On your own, write the hypotheses we just described in words using symbols
 
 ---
 ## Example 6.3: Breastfeeding and Intelligence
@@ -673,7 +717,11 @@ OR
 $$\begin{align}H_0: \mu_{BF} &= \mu_{Not}\\H_A: \mu_{BF} &\neq \mu_{Not}\end{align}$$
 ]
 
+???
 
+We use $\mu$ because the response is quantitative, and we denote the two groups as $\mu_{BF}$ and $\mu_{Not}$. We can write the hypotheses in two ways that are mathematically the same: either the difference between the two population means is 0, or the two population means are equal to each other for the null.
+
+The alternative is that they are not equal - this is equivalent to saying "there is an association"
 
 ---
 ## Example 6.3: Breastfeeding and Intelligence
@@ -712,6 +760,14 @@ ggplot() +
   facet_grid(status ~ .)
 
 ```
+
+???
+
+I didn't have the full data for the study, but I've simulated data consistent with the statistics reported in the paper. You can see that the median GCI score is slightly higher in breastfed infants, and the entire boxplot is slightly shifted up... 
+
+but you can also see that there are a lot more breastfed babies than formula fed babies
+
+How would we compute a confidence interval for the difference in average intelligence of breastfed and formula fed infants?
 
 
 ---
@@ -753,6 +809,10 @@ ggplot(bf_sim, aes(x = GCI_diff, fill = color)) +
 
 `r round(stat, 3)` $\pm$ 2 (`r round(sd(bf_sim$GCI_diff), 3)`) = `r sprintf("(%0.3f, %0.3f)", stat - 2 * sd(bf_sim$GCI_diff),  mean(bf_sim$GCI_diff) + 2 * sd(bf_sim$GCI_diff))`
 
+???
+
+The first option, which I've called the "theory-ish" based confidence interval, is to use the simulation standard error of the average difference. This is the lazy method - you don't have to actually do the calculation of the standard error, you make the computer do it automatically. However, because it's simulated, you're assuming the null hypothesis is true.... which probably isn't a big deal if the two groups have roughly equal sizes and standard deviations, but might be a problem if there are differences in the variability between the two groups in addition to the means.
+
 ---
 ## Example 6.3: Breastfeeding and Intelligence
 
@@ -766,8 +826,15 @@ $$\begin{align}SD(\overline x_1 - \overline x_2) &= \sqrt{\frac{s_1^2}{n_1} + \f
 
 On a test, use Option 2 unless it explicitly says you may use the simulation standard error
 
+???
+
+The better option is to calculate the standard deviation of the difference in sample means using a formula. You'll notice that this formula looks pretty similar to the standard error formula used for differences in proportions - instead of p times 1-p, we have s^2, but we're still weighting each variance by the sample size in the group.
+
+On a test, you should always calculate the standard error of the difference unless you're told that you can use the simulated value for the standard error.
+
+
 ---
-## Example 6.3: Breastfeeding and Intelligence
+## Theory Based Inference
 
 A standardized statistic is thus
 
@@ -786,6 +853,17 @@ OR
 
 If the validity conditions hold, you can use the guideline that if $t > 2$, then the p-value is probably $< 0.05$.
 
+
+???
+
+We can use the standard error to get a standardized statistic in the usual way.
+
+To use Theory based inference, we need one of two things: both groups have symmetric distributions, or there are at least 20 observations in each group and the sample distributions are not too skewed.
+
+Basically, the sample mean for each group has to be normally distributed -- so each group has to have symmetry or 20 observations, and then you can combine them and assume the result is also normally distributed.
+
+If the validity conditions hold, you can assess the standardized statistic using the cutoff of 2, and assume that corresponds to a p-value of less than 0.05.
+
 ---
 ## Factors Affecting the Width of a CI
 
@@ -797,3 +875,19 @@ If the validity conditions hold, you can use the guideline that if $t > 2$, then
 - variability of group 1 and/or group 2
 
 - multiplier
+
+???
+
+Just as in Chapter 5, the width of an interval is affected by 3 things: 
+
+The group sizes -- both the overall number of observations, and the difference between the two group sizes. 
+
+- More data = smaller standard error = smaller margin of error = narrower width.
+- Balanced group sizes will have smaller margin of error than unbalanced group sizes, if everything else stays the same.
+
+The next factor that affects the width is the variability of the two groups
+
+The last thing that affects the width of a CI is the multiplier. 
+
+With that, we're done with Chapter 6! Congratulations for making it this far.
+
