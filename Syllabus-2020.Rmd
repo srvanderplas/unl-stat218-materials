@@ -52,7 +52,7 @@ class_material <- c("Review syllabus, Chapter P", "Chapter P, Chapter 1, Section
                     "Chapter 3, Section 3.3", "Chapter 3, Section 3.4 and Chapter 3 review", 
                     "Chapter 4, Section 4.1", "Chapter 4, Section 4.2 and Chapter 4 review", 
                     "Chapter 5, Section 5.1", "Chapter 5, Section 5.2 and 5.3", 
-                    "~~Chapter 5, Section 5.3 and Exam 2 review~~", "~~Exam 2~~", 
+                    "Classes Cancelled", "Classes Cancelled", 
                     "Spring Break", "Spring Break", 
                     "Exam 2 (online)", "Chapter 6, Section 6.1", 
                     "Chapter 6, Section 6.2 and 6.3", "Chapter 7, Section 7.1", 
@@ -218,8 +218,8 @@ You are expected to read the assigned chapters before coming to class.
 ```{r schedule, echo = F, results='markup', out.extra="center"}
 options(knitr.kable.NA = "")
 knitr::kable(class_schedule, align = "l", format = "latex", booktabs = T) %>%
-   kableExtra::row_spec(c(9, 10, 19, 20, 22, 30, 32), hline_after = T) %>%
-   kableExtra::row_spec(c(10, 20, 33), bold = T)
+   kableExtra::row_spec(c(9, 10, 18, 20, 22, 23, 32), hline_after = T) %>%
+   kableExtra::row_spec(c(10, 23, 33), bold = T)
 ```
 \end{center}
 
