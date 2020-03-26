@@ -20,12 +20,8 @@ grader:
    name: "Josh Carini"
    email: "joshua.carini@huskers.unl.edu"
 officehours:
-   - name: "Susan Vanderplas"
-     time: "TR 11:30-1"
-     location: "Hardin Hall 349a (East Campus)"
-   - name: "Kevin Toney"
-     time: "M 2:15-3:15PM, W 9:30-10:30AM"
-     location: "Pound 208.1"
+   - name: "Dr. Vanderplas"
+     time: "[Zoom  link](https://unl.zoom.us/j/6225610547)"
 fontfamily: mathpazo
 fontsize: 11pt
 ---
