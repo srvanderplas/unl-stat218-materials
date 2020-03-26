@@ -14,7 +14,7 @@ files <- list.files(here::here("handouts"), pattern = ".pdf$")
 
 tibble(file = files) %>%
   mutate(
-    Chapter = str_extract(file, "[\\d\\.]{1,}(?:_P)?"),
+    Chapter = str_extract(file, "[\\d\\.]{1,}(?:_P_)?"),
     Title = str_remove(file, Chapter) %>% str_remove("(_key)?.pdf$") %>% str_replace_all("_", " ") %>% str_trim(),
     Link = sprintf("<a href=\"%s\">%s</a>", file, Title),
     Type = str_extract(file, "key")
