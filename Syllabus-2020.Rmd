@@ -51,14 +51,14 @@ class_material <- c("Review syllabus, Chapter P", "Chapter P, Chapter 1, Section
                     "Chapter 2 review and Chapter 3, Section 3.1", "Chapter 3, Section 3.2", 
                     "Chapter 3, Section 3.3", "Chapter 3, Section 3.4 and Chapter 3 review", 
                     "Chapter 4, Section 4.1", "Chapter 4, Section 4.2 and Chapter 4 review", 
-                    "Chapter 5, Section 5.1", "Chapter 5, Section 5.2", 
-                    "Chapter 5, Section 5.3 and Exam 2 review", "Exam 2", 
+                    "Chapter 5, Section 5.1", "Chapter 5, Section 5.2 and 5.3", 
+                    "~~Chapter 5, Section 5.3 and Exam 2 review~~", "~~Exam 2~~", 
                     "Spring Break", "Spring Break", 
-                    "Chapter 6, Section 6.1", "Chapter 6, Section 6.2", 
-                    "Chapter 6, Section 6.3 and Chapter 6 review", "Chapter 7, Section 7.1", 
+                    "Exam 2 (online)", "Chapter 6, Section 6.1", 
+                    "Chapter 6, Section 6.2 and 6.3", "Chapter 7, Section 7.1", 
                     "Chapter 7, Section 7.2", "Chapter 7, Section 7.3",
-                    "TBD", "TBD",
-                    "Review", "Review")
+                    "Chapter 10.1 and 10.2", "Chapter 10.3",
+                    "Chapter 10.4", "Chapter 10.5 and Final Exam Review")
 
 classes <- tibble(date = seq(start_date, end_date, by = "day")) %>%
    filter(wday(date, label = T, abbr = F) %in% class_days) %>%
