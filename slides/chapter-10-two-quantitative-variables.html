@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Ch. 10: Two Quantitative Variables</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="" />
+    <link rel="stylesheet" href="css/default.css" type="text/css" />
+    <link rel="stylesheet" href="css/default-fonts.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Ch. 10: Two Quantitative Variables
+
+---
+
+
+
+
+# Navigation
+
+
+.large[By Section]
+- 10.1: [start](#3) - [end](#15)
+- 10.2: [start](#16) - [end](#36)
+- 10.3: [start](#37) - [end](#49)
+- 10.4: [start](#50) - [end](#51)
+- 10.5: [start](#52) - [end](#53)
+
+???
+
+We've worked our way up from one categorical variable to one quantitative variable, then we made it harder by adding another variable (two categorical variables, a categorical variable and a quantitative variable). For the final chapter in this class, we're going to look at what happens when we have two quantitative variables... we're going to talk about correlation and regression.
+
+---
+class:inverse,middle,center
+# 10.1: Two Quantitative Variables
+## Scatterplots and Correlation
+
+
+
+---
+## Graphical Summaries of Quantitative Variables
+
+.pull-left[
+.small[[R.J. Gladstone (1905). "A Study of the Relations of the Brain to the Size of the Head", Biometrika, Vol. 4, p 105-123. ](https://www.jstor.org/stable/pdf/2331533.pdf)]
+
+Data collected during 237 autopsies at Middlesex Hospital in London, excluding cases "in which the brain showed a distinctly pathological condition which would have obviously affected its weight"
+
+Variables:
+- Gender
+- Age (20 - 45 or 46+)
+- Brain Weight (g)
+- Head Size (cubic cm)
+.small[the smallest rectangular block which could contain the head]
+
+].pull-right[
+&lt;!-- ![Kitten Brain Meme](https://live.staticflickr.com/3281/2907281768_785794f9e2.jpg) --&gt;
+![Skull Measurement Diagram from the paper](figure/brain-size-diagram.png)
+]
+.bottom[]
+???
+
+Early statisticians were very interested in the natural world - in addition to quantifying traits of plants, they also conducted extensive studies of human anatomy and physiology, looking at the relationship between various traits, how those traits might be inherited, and more. 
+
+One of these studies looked at people brought into the Middlesex hospital morgue for autopsy, examining the relationship between head size and brain weight. They examined everyone who was brought in who didn't have an obvious brain pathology.
+
+---
+## Graphical Summaries of Quantitative Variables
+
+A single quantitative variable can be summarized visually using a histogram or a bar chart:
+
+&lt;img src="chapter-10-two-quantitative-variables_files/figure-html/unnamed-chunk-1-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+## Graphical Summaries of Quantitative Variables
+
+But, summarizing each variable separately doesn't tell us how the two variables might be related.
+
+Is there a relationship between brain weight and head size? How do you know?
+
+--
+
+&lt;img src="chapter-10-two-quantitative-variables_files/figure-html/unnamed-chunk-2-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+A **scatterplot** is a plot with the explanatory variable on the x-axis, and the response variable on the y-axis. Observations are shown as points corresponding to a set of quantitative measurements.
+
+
+---
+## Describing Variable Relationships: Direction
+
+&lt;img src="chapter-10-two-quantitative-variables_files/figure-html/unnamed-chunk-3-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+Positive slope: as `\(x\)` increases, `\(y\)` increases too.
+
+
+
+---
+## Describing Variable Relationships: Form
+
+The **form** of an association is whether it follows a linear pattern, or some sort of more complicated pattern - periodic, polynomial (quadratic, cubic, etc.)
+
+&lt;img src="chapter-10-two-quantitative-variables_files/figure-html/unnamed-chunk-4-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+## Describing Variable Relationships: Strength
+
+The **strength** of an association indicates how well the value of one variable can be predicted if you know the value of the other variable.
+
+&lt;img src="chapter-10-two-quantitative-variables_files/figure-html/unnamed-chunk-5-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+--
+
+We can describe the strength and direction of a *linear* relationship using the **correlation coefficient**
+
+---
+## Correlation Coefficient
+
+The **correlation coefficient**, `\(r\)`, is always between -1 and 1. 
+
+.small[
+-1 | -0.5 | 0  | 0.5 | 1 
+:--: | :---: | :--: | :---: | :--:
+perfect negative correlation | moderate negative correlation | no correlation | moderate positive correlation | perfect positive correlation
+]
+
+
+&lt;img src="chapter-10-two-quantitative-variables_files/figure-html/unnamed-chunk-6-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+## Correlation Coefficient
+
+The **correlation coefficient**, `\(r\)`, is always between -1 and 1. 
+
+.small[
+-1 | -0.5 | 0  | 0.5 | 1 
+:--: | :---: | :--: | :---: | :--:
+perfect negative correlation | moderate negative correlation | no correlation | moderate positive correlation | perfect positive correlation
+]
+
+
+&lt;img src="chapter-10-two-quantitative-variables_files/figure-html/unnamed-chunk-7-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+## Correlation Coefficient
+
+![XKCD about weak correlations](https://imgs.xkcd.com/comics/linear_regression.png)
+
+---
+## Correlation Coefficient
+
+Get a feel for it by 
+[playing the correlation guessing game!](https://www.rossmanchance.com/applets/GuessCorrelation.html)
+
+![Screenshot of correlation guessing game](figure/corr-guess-game.png)
+
+
+---
+## Correlation Coefficient
+
+The correlation coefficient is only useful for showing the strength of .underline[linear relationships]. 
+
+&lt;img src="chapter-10-two-quantitative-variables_files/figure-html/unnamed-chunk-8.gif" width="50%" style="display: block; margin: auto;" /&gt;
+All of these plots have essentially the same correlation coefficient, but in some cases there are very clear associations between `\(x\)` and `\(y\)`
+
+&lt;!-- See the animation [here](https://twitter.com/maartenzam/status/770723795518812160) --&gt;
+
+
+---
+## Outliers and Influential Observations
+
+![XKCD - Outliers](https://imgs.xkcd.com/comics/boyfriend.png)
+
+With one variable, outliers are fairly easy to spot
+
+--
+
+When there are two variables, we don't just have to worry about outliers in one dimension; we also have to worry about **influential observations**
+
+---
+## Outliers and Influential Observations
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
