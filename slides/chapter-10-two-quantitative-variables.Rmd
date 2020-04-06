@@ -15,6 +15,7 @@ output:
 library(ggplot2)
 library(tidyverse)
 knitr::opts_chunk$set(dpi=300, message = F, warning = F, echo = F, fig.width = 8, fig.height = 4, out.width = "80%", fig.align = "center", cache = T)
+options(digits = 3)
 theme_set(theme_bw())
 ```
 
@@ -579,3 +580,102 @@ Remember, we can't measure nonlinear relationships with the correlation coeffici
 
 ---
 # 10.3: Least Squares Regression
+
+---
+## Motivation
+
+In the last two sections, we've talked about the Brain weight vs. Head size data:
+
+```{r}
+brain %>%
+  ggplot(aes(y = BrainWeight, x = HeadSize)) + geom_point() + 
+  ylab("Brain Weight, grams") + xlab("Head Size, cm^3") + ggtitle("A Study of the Relations of the Brain to the Size of the Head") + coord_fixed(ratio = 1.5)
+```
+
+???
+
+It's very convenient to be able to visually see the relationship, or even to assess the amount of linear association using the correlation coefficient. But if I measure my husband's head, and find that it's 4700 cm^3, how do I estimate his brain weight? It's generally not acceptable to decapitate someone to collect data, but I don't have a data point at 4700 cm^3, so what do I do?
+
+
+---
+## Regression Line
+
+
+```{r}
+lreg <- lm(BrainWeight~HeadSize, data = brain)
+
+brain %>%
+  ggplot(aes(y = BrainWeight, x = HeadSize)) + geom_point() + 
+  ylab("Brain Weight, grams") + xlab("Head Size, cm^3") + ggtitle("A Study of the Relations of the Brain to the Size of the Head") + coord_fixed(ratio = 1.5) + 
+  geom_smooth(method = "lm", se = F)
+```
+
+General equation: $\hat y = a + b x$ where
+  - $x$ is the explanatory variable 
+  - $\hat y$ is the response variable
+  - $a$ is the **y-intercept** (the predicted value when $x=0$)
+  - $b$ is the **slope**
+
+???
+
+Using my data, I fit a linear "trend line" to the data that I've collected. The line gives me the best estimate of the linear relationship between x and y, and also allows me to predict y from a given x value. 
+
+
+The equation of a line has the form y = a + b x, but when we talk about data, we say $\hat y$ (y hat) = a + b x because we're making it clear that we're predicting y (which is why y gets a hat). 
+
+$a$ is the y-intercept - the value of $\hat y$ when $x = 0$. 
+
+$b$ is the slope - when x increases by 1, the slope describes the change in $\hat y$
+
+---
+## Regression Line
+
+The equation of the regression line in the picture on the last slide is:
+$$\hat y = `r lreg$coefficients[1]` + `r lreg$coefficients[2]` x$$
+
+What does that mean?
+
+- With a head size of 0 $cm^3$, we would expect a brain weight of ...    
+325.57 g (on average)    
+.small[Sometimes, the interpretation of the intercept doesn't make a lot of sense in context.]
+
+- An increase in head size of 1 $cm^3$ leads to a predicted change in average brain weight of 0.2634 grams
+
+Note that the sign of the slope is the same as the sign of the correlation coefficient, because both indicate the direction of the association.
+
+
+---
+## Extrapolation
+
+![Extrapolation xkcd comic: As you can see, by late next month you'll have over four dozen husbands. Better get a bulk rate on wedding cake.](https://imgs.xkcd.com/comics/extrapolating.png)
+
+Predicting values for the response variable for explanatory variable values outside the range of the original data is known as **extrapolation** and can lead to very misleading predictions.
+
+
+---
+## Extrapolation
+
+Predicting values for the response variable for explanatory variable values outside the range of the original data is known as **extrapolation** and can lead to very misleading predictions.
+
+For instance, if we try to predict the brain weight of a 2.5 month old child included in the original brain weight publication (but not in our dataset)...
+
+$x = 1212$, so $\hat y = ?$
+
+--
+
+$325.573 + 0.263 (1212) = 644.850$
+
+Our model would predict that the child's brain would weigh about 645 grams, on average. In fact, it weighted 490 grams. 
+
+Our prediction had an error of $490 - 644.850 = -154.850$
+
+--
+
+This error is called a **residual**
+
+???
+
+That's actually not horrible prediction-wise, but our model probably is not a good predictor of the brain weight of children, who have a different head-to-body size ratio and may have brain tissue which is much more dense and highly connected.
+
+More importantly, the lowest observation we have is 2720 cm3, which is more than twice what we just tried to predict. So we're really far outside the bounds of what's a reasonable prediction based on the data that we have.
+
