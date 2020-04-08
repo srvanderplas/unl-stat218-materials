@@ -679,3 +679,202 @@ That's actually not horrible prediction-wise, but our model probably is not a go
 
 More importantly, the lowest observation we have is 2720 cm3, which is more than twice what we just tried to predict. So we're really far outside the bounds of what's a reasonable prediction based on the data that we have.
 
+---
+## Extrapolation
+
+Extrapolation is sometimes reasonable, but often is ill-advised. 
+
+- I have data on the foot length and height of 58 people, ranging from 4'10 to 6'1. I want to predict the foot length of someone who is 
+    - 4'2 : 
+.hidden[not a good idea - most adults are taller, the relationship may not hold for children]
+    - 6'3 : 
+.hidden[probably fine - we're extrapolating by 2", and someone who is 6'1 is probably not so different from someone who is 6'3]
+    - 7': 
+.hidden[not a good idea, only a few people have gotten to be that tall, and the general population may not represent them well]
+    
+- I have data on the number of ice cream cones sold at a shop and the temperature for January - April. I want to predict how many cones will be sold at a shop per day during 
+    - July : 
+.hidden[not a good idea (much higher avg. temp)]
+    - early May : 
+.hidden[probably fine (avg temp approximately same as late April)]
+    - April 30, in a similarly sized midwestern town : 
+.hidden[may be reasonable, but use caution]
+    - in Saudi Arabia during May : 
+.hidden[not a good idea (much, much higher avg. temp, different location that is not similar)]
+
+???
+
+There are plenty of cases where extrapolation is necessary, but you should also get a sense of when it's a problem. 
+
+Think through these scenarios, and decide whether you're comfortable extrapolating or not, based on the data. 
+
+---
+## Extrapolation
+
+Extrapolation is sometimes reasonable, but often is ill-advised. 
+
+- I have data on the foot length and height of 58 people, ranging from 4'10 to 6'1. I want to predict the foot length of someone who is 
+    - 4'2 : 
+.red[not a good idea - most adults are taller, the relationship may not hold for children]
+    - 6'3 : 
+.red[probably fine - we're extrapolating by 2", and someone who is 6'1 is probably not so different from someone who is 6'3]
+    - 7': 
+.red[not a good idea, only a few people have gotten to be that tall, and the general population may not represent them well]
+    
+- I have data on the number of ice cream cones sold at a shop and the temperature for January - April. I want to predict how many cones will be sold at a shop per day during 
+    - July : 
+.red[not a good idea (much higher avg. temp)]
+    - early May : 
+.red[probably fine (avg temp approximately same as late April)]
+    - April 30, in a similarly sized midwestern town : 
+.red[may be reasonable, but use caution]
+    - in Saudi Arabia during May : 
+.red[not a good idea (much, much higher avg. temp, different location that is not similar)]
+    
+---
+## Least Squares Regression
+
+How do we get our regression line?
+
+```{r}
+set.seed(40238792)
+brain_sample <- brain[sample(1:nrow(brain), 20, replace = F),] %>%
+mutate(predict = predict(lreg, .))
+
+lpred <- tibble(HeadSize = seq(min(brain$HeadSize), max(brain$HeadSize))) %>%
+  mutate(predicted = predict(lreg, .))
+
+
+brain_sample %>%
+  ggplot(aes(y = BrainWeight, x = HeadSize)) + geom_point() + 
+  ylab("Brain Weight, grams") + xlab("Head Size, cm^3") + ggtitle("A Study of the Relations of the Brain to the Size of the Head") + coord_fixed(ratio = 1.5) + 
+  # geom_segment(aes(x = HeadSize, xend = HeadSize, y = BrainWeight, yend = predict), linetype = "dotted", color = "red") + 
+  geom_line(data = lpred, aes(y = predicted), color = "blue")
+```
+
+???
+
+At this point, you may be wondering how we get the values $a$ and $b$ that correspond to the slope and intercept. Now that we know what a residual is, we can talk about how we use residuals to estimate $a$ and $b$.
+
+---
+## Least Squares Regression
+
+How do we get our regression line?
+
+```{r}
+
+brain_sample %>%
+  ggplot(aes(y = BrainWeight, x = HeadSize)) + geom_point() + 
+  ylab("Brain Weight, grams") + xlab("Head Size, cm^3") + ggtitle("A Study of the Relations of the Brain to the Size of the Head") + coord_fixed(ratio = 1.5) + 
+  geom_segment(aes(x = HeadSize, xend = HeadSize, y = BrainWeight, yend = predict), linetype = "dotted", color = "red") + 
+  geom_line(data = lpred, aes(y = predicted), color = "blue")
+```
+
+The least-squares regression line minimizes the sum of the squared residuals from the line - 
+the sum of $(y - \hat y)^2$
+
+You can get a feel for what this means [here](https://setosa.io/ev/ordinary-least-squares-regression/) - play with the first two charts.    
+.small[(this page has regression with multiple variables as well, but ignore that part unless you're interested - this class only does single-variable regression.)]
+
+???
+
+We want the best possible line, which we'll define as the line that minimizes the errors. Now, it's equally bad to have a negative residual (to predict a value higher than what we actually see) and a positive residual (predicting less than what we see), so we have to somehow get rid of the sign issues. Early on, statisticians decided just squaring everything would be the easiest way to do that (it makes derivations easier). 
+
+Because we square things, large residuals have a lot of influence over the "best fit" line. What that means in practice is that outliers can have a big effect on the parameters of the regression line, because big residuals are more damaging than many small residuals.
+
+---
+## Coefficient of Determination ($R^2$)
+
+We can measure how well our data fit our regression line with $R^2$ (which is literally the correlation value, squared). 
+
+$R^2$ is between 0 and 1, where 1 = perfect predictions and 0 = no relationship at all. 
+
+```{r}
+brain %>%
+  ggplot(aes(y = BrainWeight, x = HeadSize)) + geom_point() + 
+  ylab("Brain Weight, grams") + xlab("Head Size, cm^3") + ggtitle("A Study of the Relations of the Brain to the Size of the Head") + coord_fixed(ratio = 1.5) + 
+  geom_smooth(method = "lm", se = F)
+```
+
+The $R^2$ for this plot is `r summary(lreg)$r.squared`
+
+???
+
+In Section 10.1, we talked about the correlation coefficient, $r$, which was a measure of how strong the linear association between two variables is. 
+
+Now that we have a regression line, we can talk a bit more about how to characterize $r$ in relation to the linear regression line. Specifically, we're going to talk about $R^2$, which is literally $r$ squared. We also call $R^2$ the coefficient of determination, and what it tells us is specifically how much our regression line describes the data. 
+
+Notice that r provides us with the direction of the relationship, but because it's squared, $R^2$ does not - it is strictly between 0 and 1.
+
+---
+## Coefficient of Determination
+
+
+```{r, fig.width = 8, fig.height = 4, out.width = "100%"}
+set.seed(34259028)
+dat <- tibble(r = seq(0, .95, length.out = 6), 
+              dat = purrr::map(r, ~mvrnorm(75, c(0, 0), matrix(c(1, ., ., 1), nrow = 2)) %>% as.data.frame() %>% set_names(c("x", "y")))) %>%
+  unnest("dat") %>%
+  group_by(r) %>%
+  mutate(Rsq = sprintf("R^2=%.3f", cor(x, y)^2))
+
+ggplot(data = dat, aes(x = x, y = y)) + 
+  geom_point() + 
+  facet_wrap(~Rsq, ncol = 3, scales = "free") + 
+  theme(axis.title = element_blank(), axis.ticks = element_blank(), axis.text = element_blank()) + 
+  geom_smooth(method = "lm")
+```
+
+???
+
+Here are a selection of different randomly generated data sets with different R^2 values. You can see that (other than having a slope) the slope of the line through the point cloud doesn't really matter - what matters is the clustering of points around that line. 
+
+
+
+---
+## Coefficient of Determination ( $R^2$ )
+
+$R^2$ can be interpreted as the percentage of variability in $y$ which is explained by the regression line.
+
+
+```{r, ffmpeg.format='gif', fig.show='animate', dev = "jpeg", dpi = 300, interval=5, aniopts = "controls"}
+brain_sample %>%
+  ggplot(aes(y = BrainWeight, x = HeadSize)) + 
+  geom_line(data = lpred, aes(y = predicted), color = "white") + 
+  # geom_point(data = brain, shape = NA) + 
+  geom_point() + 
+  ylab("Brain Weight, grams") + xlab("Head Size, cm^3") +
+  coord_fixed(ratio = 1.5) + 
+  geom_segment(aes(x = HeadSize, xend = HeadSize, y = mean(BrainWeight), yend = BrainWeight), linetype = "dotted", color = "blue") + 
+  ggtitle("1. Total Variability in y") + 
+  geom_line(aes(y = mean(BrainWeight)), color = "blue")
+
+brain_sample %>%
+  ggplot(aes(y = BrainWeight, x = HeadSize)) + geom_point() + 
+  ylab("Brain Weight, grams") + xlab("Head Size, cm^3") +
+  coord_fixed(ratio = 1.5) + 
+  # geom_segment(aes(x = HeadSize, xend = HeadSize, y = BrainWeight, yend = predict), linetype = "dotted", color = "red") + 
+  geom_segment(aes(x = HeadSize, xend = HeadSize, y = mean(BrainWeight), yend = predict), linetype = "dotted", color = "black") + 
+  ggtitle("2. Variability Explained by Linear Regression") + 
+  geom_line(data = lpred, aes(y = predicted), color = "red") + 
+  geom_line(aes(y = mean(BrainWeight)), color = "blue")
+
+brain_sample %>%
+  ggplot(aes(y = BrainWeight, x = HeadSize)) + geom_point() + 
+  ylab("Brain Weight, grams") + xlab("Head Size, cm^3") +
+  coord_fixed(ratio = 1.5) + 
+  # geom_segment(aes(x = HeadSize, xend = HeadSize, y = BrainWeight, yend = predict), linetype = "dotted", color = "red") + 
+  geom_segment(aes(x = HeadSize, xend = HeadSize, y =BrainWeight, yend = predict), linetype = "dotted", color = "red") + 
+  ggtitle("3. Unexplained Variability") + 
+  geom_line(data = lpred, aes(y = predicted), color = "red") + 
+  geom_line(aes(y = mean(BrainWeight)), color = "blue")
+
+```
+
+---
+## Exploration 10.3
+
+Work through Exploration 10.3 (ignoring the parts which say compare with classmates) to review the concepts covered in this lecture. 
+
+Upload your answers to Canvas for extra credit.
+

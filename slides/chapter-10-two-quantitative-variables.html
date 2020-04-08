@@ -493,6 +493,134 @@ This error is called a **residual**
 That's actually not horrible prediction-wise, but our model probably is not a good predictor of the brain weight of children, who have a different head-to-body size ratio and may have brain tissue which is much more dense and highly connected.
 
 More importantly, the lowest observation we have is 2720 cm3, which is more than twice what we just tried to predict. So we're really far outside the bounds of what's a reasonable prediction based on the data that we have.
+
+---
+## Extrapolation
+
+Extrapolation is sometimes reasonable, but often is ill-advised. 
+
+- I have data on the foot length and height of 58 people, ranging from 4'10 to 6'1. I want to predict the foot length of someone who is 
+    - 4'2 : 
+.hidden[not a good idea - most adults are taller, the relationship may not hold for children]
+    - 6'3 : 
+.hidden[probably fine - we're extrapolating by 2", and someone who is 6'1 is probably not so different from someone who is 6'3]
+    - 7': 
+.hidden[not a good idea, only a few people have gotten to be that tall, and the general population may not represent them well]
+    
+- I have data on the number of ice cream cones sold at a shop and the temperature for January - April. I want to predict how many cones will be sold at a shop per day during 
+    - July : 
+.hidden[not a good idea (much higher avg. temp)]
+    - early May : 
+.hidden[probably fine (avg temp approximately same as late April)]
+    - April 30, in a similarly sized midwestern town : 
+.hidden[may be reasonable, but use caution]
+    - in Saudi Arabia during May : 
+.hidden[not a good idea (much, much higher avg. temp, different location that is not similar)]
+
+???
+
+There are plenty of cases where extrapolation is necessary, but you should also get a sense of when it's a problem. 
+
+Think through these scenarios, and decide whether you're comfortable extrapolating or not, based on the data. 
+
+---
+## Extrapolation
+
+Extrapolation is sometimes reasonable, but often is ill-advised. 
+
+- I have data on the foot length and height of 58 people, ranging from 4'10 to 6'1. I want to predict the foot length of someone who is 
+    - 4'2 : 
+.red[not a good idea - most adults are taller, the relationship may not hold for children]
+    - 6'3 : 
+.red[probably fine - we're extrapolating by 2", and someone who is 6'1 is probably not so different from someone who is 6'3]
+    - 7': 
+.red[not a good idea, only a few people have gotten to be that tall, and the general population may not represent them well]
+    
+- I have data on the number of ice cream cones sold at a shop and the temperature for January - April. I want to predict how many cones will be sold at a shop per day during 
+    - July : 
+.red[not a good idea (much higher avg. temp)]
+    - early May : 
+.red[probably fine (avg temp approximately same as late April)]
+    - April 30, in a similarly sized midwestern town : 
+.red[may be reasonable, but use caution]
+    - in Saudi Arabia during May : 
+.red[not a good idea (much, much higher avg. temp, different location that is not similar)]
+    
+---
+## Least Squares Regression
+
+How do we get our regression line?
+
+&lt;img src="chapter-10-two-quantitative-variables_files/figure-html/unnamed-chunk-16-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+???
+
+At this point, you may be wondering how we get the values `\(a\)` and `\(b\)` that correspond to the slope and intercept. Now that we know what a residual is, we can talk about how we use residuals to estimate `\(a\)` and `\(b\)`.
+
+---
+## Least Squares Regression
+
+How do we get our regression line?
+
+&lt;img src="chapter-10-two-quantitative-variables_files/figure-html/unnamed-chunk-17-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+The least-squares regression line minimizes the sum of the squared residuals from the line - 
+the sum of `\((y - \hat y)^2\)`
+
+You can get a feel for what this means [here](https://setosa.io/ev/ordinary-least-squares-regression/) - play with the first two charts.    
+.small[(this page has regression with multiple variables as well, but ignore that part unless you're interested - this class only does single-variable regression.)]
+
+???
+
+We want the best possible line, which we'll define as the line that minimizes the errors. Now, it's equally bad to have a negative residual (to predict a value higher than what we actually see) and a positive residual (predicting less than what we see), so we have to somehow get rid of the sign issues. Early on, statisticians decided just squaring everything would be the easiest way to do that (it makes derivations easier). 
+
+Because we square things, large residuals have a lot of influence over the "best fit" line. What that means in practice is that outliers can have a big effect on the parameters of the regression line, because big residuals are more damaging than many small residuals.
+
+---
+## Coefficient of Determination ($R^2$)
+
+We can measure how well our data fit our regression line with `\(R^2\)` (which is literally the correlation value, squared). 
+
+`\(R^2\)` is between 0 and 1, where 1 = perfect predictions and 0 = no relationship at all. 
+
+&lt;img src="chapter-10-two-quantitative-variables_files/figure-html/unnamed-chunk-18-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+The `\(R^2\)` for this plot is 0.639
+
+???
+
+In Section 10.1, we talked about the correlation coefficient, `\(r\)`, which was a measure of how strong the linear association between two variables is. 
+
+Now that we have a regression line, we can talk a bit more about how to characterize `\(r\)` in relation to the linear regression line. Specifically, we're going to talk about `\(R^2\)`, which is literally `\(r\)` squared. We also call `\(R^2\)` the coefficient of determination, and what it tells us is specifically how much our regression line describes the data. 
+
+Notice that r provides us with the direction of the relationship, but because it's squared, `\(R^2\)` does not - it is strictly between 0 and 1.
+
+---
+## Coefficient of Determination
+
+
+&lt;img src="chapter-10-two-quantitative-variables_files/figure-html/unnamed-chunk-19-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+???
+
+Here are a selection of different randomly generated data sets with different R^2 values. You can see that (other than having a slope) the slope of the line through the point cloud doesn't really matter - what matters is the clustering of points around that line. 
+
+
+
+---
+## Coefficient of Determination ( `\(R^2\)` )
+
+`\(R^2\)` can be interpreted as the percentage of variability in `\(y\)` which is explained by the regression line.
+
+
+&lt;img src="chapter-10-two-quantitative-variables_files/figure-html/unnamed-chunk-20.gif" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+## Exploration 10.3
+
+Work through Exploration 10.3 (ignoring the parts which say compare with classmates) to review the concepts covered in this lecture. 
+
+Upload your answers to Canvas for extra credit.
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
