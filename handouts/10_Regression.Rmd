@@ -1,0 +1,29 @@
+---
+title: "Chapter 10 Scenarios"
+output: 
+  pdf_document:
+    template: template.tex
+geometry: margin=1in,headsep=.2in
+params:
+  key: true
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F, message = F, warning = F)
+library(tidyverse)
+options(digits = 3)
+```
+
+```{r fix-latex, results='asis', echo = F, message = F}
+if (params$key) {
+  cat("\\newcommand{\\answer}[1]{{\\large\\color{red}\\emph{#1}}}")
+  cat("\\providecommand{\\tightlist}{\\setlength{\\itemsep}{1em}\\setlength{\\parskip}{0pt}}")
+  cat("\\chead{\\color{red}{KEY}}")
+} else {
+  # cat("\\newcommand{\\answer}[1]{{\\color{white}#1}}") 
+  cat("\\newcommand{\\answer}[1]{{\\leavevmode\\protect\\phantom{\\large #1}}}")
+  cat("\\providecommand{\\tightlist}{\\setlength{\\itemsep}{1em}\\setlength{\\parskip}{0pt}}")
+}
+
+``` 
