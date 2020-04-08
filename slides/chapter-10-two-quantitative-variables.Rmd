@@ -1252,7 +1252,7 @@ I reject $H_0$ that there is no linear relationship between head size and brain 
 
 --
 
-Note that this is the same interpretation (word for word) as we used in Section 10.2
+Note that this is the same interpretation (word for word) as we used in Section 10.2 (with the parameter changed)
 
 
 ---
@@ -1268,6 +1268,14 @@ class:center,middle,inverse
 - general pattern of the points should follow a linear trend (no curved or nonlinear patterns)
 - about the same number of points above and below the regression line (symmetry)
 - variability of points around the regression line should be similar regardless of the value of $x$ (equal variance)
+
+???
+
+As in the past, to do theory-based inference, we'll need a few additional things: validity conditions and a way to get the standard error. 
+
+For linear regression, the validity conditions are basically that: 1. the relationship is linear, 2. the data is distributed approximately symmetrically above and below the regression line, and 3. the variability is consistent across the range of $x$. 
+
+Let's look at what that means.
 
 ---
 ## Requirements for Theory-Based Inference
@@ -1294,6 +1302,8 @@ ggplot() +
   theme(axis.title = element_blank()) + coord_fixed(xlim = c(-2, 2), ylim = c(-2, 2)) 
 ```
 
+???
+Here, you can only use theory-based inference on the first of the 4 plots. Really, even simulation-based inference isn't going to actually tell you that much (because the interesting part is the not-linear part of all of these plots) but you definitely can't use theory-based inference safely.
 
 ---
 ## Requirements for Theory-Based Inference
@@ -1318,6 +1328,13 @@ ggplot(data = dat, aes(x = x, y = y)) +
   geom_smooth(method = "lm", se = F)
 ```
 
+???
+
+One big concern is that your data might be unbalanced. That is, a few points that maybe don't even belong would be messing up your ability to conduct inference. 
+
+More specifically, here, we're assuming that your errors have a mean of 0, and are symmetrically distributed. So this is essentially the equivalent of the Ch. 6 assumption that you either have symmetry or at least 20 observations, but in this case, we're requiring symmetry.
+
+
 ---
 ## Requirements for Theory-Based Inference
 
@@ -1340,6 +1357,10 @@ ggplot(data = dat, aes(x = x, y = y)) +
   theme(axis.title = element_blank()) + 
   geom_smooth(method = "lm", se = F)
 ```
+
+???
+
+Finally, we need to know that no matter where in $x$ we are, our errors  are uniformly distributed - they have the same mean (0) and the same variance. In the plot on the right, however, it's clear that we don't have the same variance. 
 
 
 ---
@@ -1364,6 +1385,10 @@ ggplot(data = dat, aes(x = x, y = y)) +
   theme(axis.title = element_blank())
 ```
 
+???
+
+One area that I do research in is how people perceive statistical charts and graphics, and from some of the work I did during my dissertation, I can tell you that it's often easier to see patterns from residual plots - that is, instead of plotting y against x, we plot the residual against x instead. That allows us to see patterns more clearly - in this case, you can see a "fan" shape in the residual plot on the right, which indicates that the variability in the residuals is not constant. 
+
 ---
 ## Theory-Based Inference
 
@@ -1373,9 +1398,15 @@ $$SE(r) = \sqrt{\frac{1-r^2}{n-2}}$$
 
 Then, $$t = \frac{r}{SE(r)}$$
 
-Because $t$ can be calculated from either the slope or the correlation coefficient, the tests are identical. 
+Because $t$ can be calculated from either the slope or the correlation coefficient, the test results will be identical. 
 
 We could also make a theory-based confidence interval for $r$ using the standard error.
+
+???
+
+Now that we know our validity conditions, we have to figure out how to get the standard error. If we're doing our test on the correelation coefficient, the formula for the standard error is the square root of 1 - r^2 divided by n-2. Then you just divide r by that SE to get the t-value. 
+
+It's not as common to make a confidence interval for the correlation coefficient, but it's doable - you just use the 2sd method and the standard error formula to get an interval. 
 
 ---
 ## Theory-Based Inference
@@ -1395,8 +1426,15 @@ Because $t$ can be calculated from either the slope or the correlation coefficie
 
 We could also make a theory-based confidence interval for $t$ using the standard error.
 
+???
+
+This class doesn't cover the formula for the standard error of the slope, but you'll often see it provided in the output of almost any statistical software. Usually the regression results will be reported as in the table shown here - you'll have the intercept and the slope on separate rows, and then the estimate, standard error, t value, and corresponding p-value as columns. Sometimes, they'll even provide you some signal that the effect is significant.
+
+All you have to do is read the correct mean and standard error from the table, and combine them using the t value formula or the 2SD confidence interval formula. Nice and simple.
+
+
 ---
-## Theory-Based Inference
+## Interpretations - Slope
 
 Hypothesis test interpretation:
 
@@ -1411,6 +1449,10 @@ Confidence interval interpretation:
 
 I am 95% confident that as .underline[explanatory variable] increases by 1 unit, the predicted population average value of .underline[response variable] will change by between .underline[(lower bound of b interval)] and .underline[(upper bound of b interval)]
 
+???
+
+The next thing is to figure out how we'd interpret these tests and intervals. If we're working with the slope, we'd say ... if we're doing a hypothesis test, and ... if we're interpreting a confidence interval. You need to customize the underlined parts to match your problem.
+
 ---
 ## Example: Head Size and Brain Weight
 
@@ -1421,10 +1463,60 @@ coef(summary(lreg))
 
 We can see that the t value is `r coef(summary(lreg))[2,3]`, which corresponds to extremely strong evidence that there is a relationship between head size and brain weight.
 
+???
+
+For example, if we go back to the now-very-boring example of head size and brain weight, we can see that our t-value is more than 20, so we have extremely strong evidence that there is a relationship between head size and brain weight. Our interpretation would be...
+
+With t > 20, I have extremely strong evidence to suggest that there is a linear relationship between head size and brain weight (p < 0.0001). I reject $H_0$ and conclude that there is a positive association between brain weight and head size: specifically, that as head size increases by 1 cubic centimeter, we would expect the predicted average brain weight to increase by 0.263 grams.
+
+Note that for the first time, we can easily get a theory-based p-value.
+
+If we wanted to make a confidence interval, we would instead use the 2SD method. Before we do that, though, what do we know about our interval?
+
+We know that it's not going to contain zero, and since our estimate is positive, we know that the upper and lower bound are both going to be positive as well. 
+
+
+---
+## Example: Head Size and Brain Weight
+
+
+```{r, results = 'markup'}
+coef(summary(lreg))
+```
+
 
 If we wanted to make a 95% CI for the slope of the line (e.g. for the increase in brain weight when head size increases by 1 cm^3), we could use the 2*SE method:
 
 $$0.263 \pm 2 * 0.0129 = (0.237, 0.289)$$
 
 I am 95% confident that the population average brain weight will increase by between 0.237 and 0.289 grams for each additional cubic centimeter of head size.
+
+???
+
+So it's easy to make our CI, we just take 2 * the standard error in the table (0.0129) and add and subtract that from our estimate. Then, the interpretation is something like...
+
+
+
+---
+## Interpretations - Correlation Coefficient
+
+Hypothesis test interpretation:
+
+With .underline[t = ...], I have .underline[(strength)] evidence to suggest that there is a linear relationship between 
+.underline[(explanatory variable)] and .underline[(response variable)]. I .underline[(accept/reject)] 
+$H_0$ 
+and conclude that .underline[(conclusion in context of the problem)]
+
+<br/><br/>
+
+Confidence interval interpretation:
+
+I am 95% confident that the population correlation between .underline[explanatory variable] and .underline[response variable] is between .underline[lower bound] and .underline[upper bound]
+
+???
+
+If we were to instead work with the correlation coefficient, we could do the same tests and get the same exact p-value. Our interpretation might change a bit because we don't have the slope to interpret; instead, we can just say that 
+
+
+With t > 20, I have extremely strong evidence to suggest that there is a linear relationship between head size and brain weight (p < 0.0001). I reject $H_0$ and conclude that there is a positive association between brain weight and head size: specifically, that the correlation between brain weight and head size is positive.
 
