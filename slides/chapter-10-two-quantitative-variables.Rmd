@@ -42,6 +42,8 @@ class:inverse,middle,center
 ```{r brain-data}
 brain <- read_table("http://users.stat.ufl.edu/~winner/data/brainhead.dat", col_names = c("Gender", "Age", "HeadSize", "BrainWeight"))
 
+lreg <- lm(BrainWeight~HeadSize, data = brain)
+
 ```
 
 ---
@@ -63,7 +65,6 @@ Variables:
 <!-- ![Kitten Brain Meme](https://live.staticflickr.com/3281/2907281768_785794f9e2.jpg) -->
 ![Skull Measurement Diagram from the paper](figure/brain-size-diagram.png)
 ]
-.bottom[]
 ???
 
 Early statisticians were very interested in the natural world - in addition to quantifying traits of plants, they also conducted extensive studies of human anatomy and physiology, looking at the relationship between various traits, how those traits might be inherited, and more. 
@@ -323,6 +324,18 @@ As I mentioned before, the correlation coefficient doesn't really help you if yo
 
 <!-- See the animation [here](https://twitter.com/maartenzam/status/770723795518812160) -->
 
+---
+## Correlation Coefficient
+
+(From Calculation Details in the Appendix)
+
+$$r = \frac{1}{n-1}\sum_{i=1}^n \left(\frac{x_i - \overline x}{s_x}\right)\left(\frac{y_i-\overline y}{s_y}\right)$$
+???
+
+You will not have to calculate this from scratch on an exam, but it helps to know how it is being calculated, if only so that you know that I'm not just pulling this magical number out of thin air.
+
+For each observation, we look at the deviation from the mean in x, divide by the variability of x; we do the same thing for y, and then we multiply them together. So if my point is above the mean of x, and above the mean of y, I'm adding a positive number to the total. If my point is below the mean of x and above the mean of y, I'm adding a negative number to the total. So looking at the formula, we see that the correlation coefficient is a measure of how associated x and y are - big values at the ends of the distribution of x and y will vastly outweigh any values close to the middle. 
+
 
 ---
 ## Outliers and Influential Observations
@@ -477,21 +490,6 @@ If there's no relationship between $x$ and $y$, then it doesn't really matter wh
 If x and y aren't related, and the value of x doesn't tell us anything about the value of y, then we can just connect x's and ys at random, right?
 
 ---
-## Summary of Simulation Model
-
-- Null hypothesis: No association between $x$ and $y$ variables
-
-- One repetition: Re randomizing the response outcomes to the explanatory variable values (randomize $y$ values)
-
-- Statistic: Correlation coefficient, $r$
-
-???
-
-If we start with the null hypothesis that there's no association between x and y, and one repetition is re-randomizing the values of y to correspond to values of x, we have one repetition is essentially "collecting" a whole new set of data. Just like every other time, right?
-
-The statistic is the correlation coefficient, which only measures linear association. So our statistic might be an imperfect measure of the association between x and y - and we need to be careful to remember that, because if there's some other association between x and y that isn't linear, it might not show up using the correlation coefficient. 
-
----
 ## Simulation-based Inference for Correlation Coefficient
 
 Our null hypothesis is $H_0:$ No relationship between $x$ and $y$
@@ -509,6 +507,22 @@ This is equivalent to shuffling the order of $y$ and creating a new regression
 This is essentially equivalent to shuffling the y's and keeping the order of the x's the same.
 
 Once we've shuffled the points, we calculate a new correlation coefficient for our simulated data. Then we compare the simulated correlation coefficients to the coefficient from our sample... and if our sample correlation coefficient is more extreme, we know that there is a linear association between x and y!
+
+---
+## Summary of Simulation Model
+
+- Null hypothesis: No association between $x$ and $y$ variables    
+The population symbol for $r$ is $\rho$, so $H_0: \rho = 0$
+
+- One repetition: Re randomizing the response outcomes to the explanatory variable values (randomize $y$ values)
+
+- Statistic: Correlation coefficient, $r$
+
+???
+
+If we start with the null hypothesis that there's no association between x and y, and one repetition is re-randomizing the values of y to correspond to values of x, we have one repetition is essentially "collecting" a whole new set of data. Just like every other time, right?
+
+The statistic is the correlation coefficient, which only measures linear association. So our statistic might be an imperfect measure of the association between x and y - and we need to be careful to remember that, because if there's some other association between x and y that isn't linear, it might not show up using the correlation coefficient. 
 
 ---
 ## Which one of these things is not like the others?
@@ -531,14 +545,63 @@ Plot 12 contains the original data.
 In the "lineup plot" I showed you earlier, this is exactly what happened. So all 19 of the plots that look like blobs of points are actually resampled exactly as I just described. Only plot 12, which is the original data, has any appearance of a relationship between x and y.
 
 ---
-## 3 S strategy
+## Hypotheses for Correlation Coefficient
+
+$H_0:$ There is no relationship between $x$ and $y$ $(\rho = 0)$
+
+$H_A:$ There is a relationship between $x$ and $y$ $(\rho \neq 0)$
+
+***
+
+$\rho$ (pronounced "row", spelled "rho") is the population version of $r$ 
+
+**Caution** $\rho$ is not $p$ and is NOT a p-value. 
+
+???
+
+To recap, when we're doing simulation-based inference for the correlation coefficient, our null hypothesis is that there's no linear relationship between x and y. Our alternative hypothesis is that there is a linear relationship between x and y, which means that r is going to be something other than zero. 
+
+Remember, we can't measure nonlinear relationships with the correlation coefficient, so be careful about that. 
+
+In symbols, we would write this as $\rho = 0$ and $\rho \neq 0$ - we have to use the greek version of the letter r, which is pronounced row and looks something like a p. But be careful!!! $\rho$ is not a p-value, so please don't get confused on the test!
+
+
+
+---
+## Example: Head Size and Brain Weight
+
+```{r}
+sse <- function(x) sum((x - mean(x))^2)
+
+# text <- sprintf("\n Sx = %.2f\n Sy = %.2f\n SSE(x)=%.2f\n SSE(y)=%.2f", sd(brain$HeadSize), sd(brain$BrainWeight), sse(brain$HeadSize), sse(brain$BrainWeight))
+text2 <- sprintf("r=%.4f \n", cor(brain$HeadSize, brain$BrainWeight))
+
+brain %>%
+  ggplot(aes(y = BrainWeight, x = HeadSize)) + geom_point() + 
+  ylab("Brain Weight, grams") + xlab("Head Size, cm^3") + ggtitle("A Study of the Relations of the Brain to the Size of the Head") + coord_fixed(ratio = 1.5) +
+  # annotate("text", x = -Inf, y = Inf, label = text, hjust = 0, vjust = 1) + 
+  annotate("text", x = Inf, y = -Inf, label = text2, hjust = 1, vjust = 0)
+```
+
+$H_0:$ No linear relationship between head size and brain weight $(\rho = 0)$
+
+$H_A:$ There is a linear relationship between head size and brain weight $(\rho \neq 0)$
+
+???
+
+So if we work a hypothesis test through as an example... we start out assuming there is no linear relationship between head size and brain weight, or $\rho = 0$. Our alternative hypothesis is that there is a linear relationship between head size and brain weight, that is, $\rho \neq 0$
+
+
+
+---
+## Example: Head Size and Brain Weight
 
 1. **Statistic** - correlation coefficient from the sample
 2. **Simulate**
-    - Assume there is no relationship between $x$ and $y$
+    - Assume there is no relationship between head size $(x)$ and brain weight $(y)$
     - Shuffle the values of $y$ 
-    - Calculate the correlation coefficient from the simulated date
-3. **Strength of evidence** - in how many simulated samples did we get a correlation coefficient with magnitude greater than our sample correlation coefficient?
+    - Calculate the correlation coefficient $r^\ast$ from the simulated data
+3. **Strength of evidence** - in how many simulated samples did we get a correlation coefficient $r^\ast$ with magnitude greater than our sample correlation coefficient $r$?
 
 ```{r}
 sim_fn <- function(x, y) {
@@ -559,6 +622,8 @@ ggplot(sim_res, aes(x = sim_cor, fill = extreme)) +
 
 ```
 
+In 0 samples out of 1000, $|r^\ast| > .7996$, so $p < 0.001$ 
+
 ???
 
 To sum this up, if we go to our 3s strategy, we start with a statistic - the correlation coefficient, r. We simulate by shuffling the y variable values around, and come up with a simulated distribution of the correlation coefficient under the null hypothesis that x and y don't have a linear relationship. Then, we compare our statistic to that distribution to get an assessment of the strength of the evidence.
@@ -566,19 +631,15 @@ To sum this up, if we go to our 3s strategy, we start with a statistic - the cor
 So when I did 1000 simulations of the correlation coefficient for our brain and head size data, I got a distribution that looked like this... basically, there is no way that our linear relationship that was observed in the data could have arisen by chance. It's just not possible - p is too small, and even if we ran a million simulations, we still wouldn't get a nonzero p. 
 
 ---
-## Hypotheses for Correlation Coefficient
+## Example: Head Size and Brain Weight
 
-$H_0:$ There is no relationship between $x$ and $y$ ($r = 0$)
+Conclusion: 
 
-$H_A:$ There is a relationship between $x$ and $y$ ($r \neq 0$)
+I reject $H_0$ that there is no linear relationship between head size and brain weight with $p < 0.001$. There is very strong evidence that the linear relationship observed between the variables did not occur due to random chance, thus, we must conclude that there is a linear relationship between head size and brain weight.
 
-???
-
-To recap, when we're doing simulation-based inference for the correlation coefficient, our null hypothesis is that there's no linear relationship between x and y. Our alternative hypothesis is that there is a linear relationship between x and y, which means that r is going to be something other than zero. 
-
-Remember, we can't measure nonlinear relationships with the correlation coefficient, so be careful about that. 
 
 ---
+class:middle,center,inverse
 # 10.3: Least Squares Regression
 
 ---
@@ -602,7 +663,6 @@ It's very convenient to be able to visually see the relationship, or even to ass
 
 
 ```{r}
-lreg <- lm(BrainWeight~HeadSize, data = brain)
 
 brain %>%
   ggplot(aes(y = BrainWeight, x = HeadSize)) + geom_point() + 
@@ -783,7 +843,44 @@ We want the best possible line, which we'll define as the line that minimizes th
 Because we square things, large residuals have a lot of influence over the "best fit" line. What that means in practice is that outliers can have a big effect on the parameters of the regression line, because big residuals are more damaging than many small residuals.
 
 ---
-## Coefficient of Determination ($R^2$)
+## Least Squares Regression
+
+How do we get our regression line? 
+
+From the computational details section of the appendix:
+
+$$b = r \frac{s_y}{s_x}$$
+where $r$ is the correlation coefficient.
+
+Then, $$a = \overline y - b \overline x$$
+
+
+
+---
+## Example: Head Size and Brain Weight
+
+```{r}
+sse <- function(x) sum((x - mean(x))^2)
+
+text <- sprintf("\n Mean(x) = %.2f, Sx = %.2f\n Mean(y) = %.2f, Sy = %.2f", mean(brain$HeadSize), sd(brain$HeadSize), mean(brain$BrainWeight), sd(brain$BrainWeight))
+text2 <- sprintf("Reg. Line: %.2f + %.2f x \nr=%.4f \n", lreg$coefficients[1], lreg$coefficients[2], cor(brain$HeadSize, brain$BrainWeight))
+
+brain %>%
+  ggplot(aes(y = BrainWeight, x = HeadSize)) + geom_point() + 
+  ylab("Brain Weight, grams") + xlab("Head Size, cm^3") + ggtitle("A Study of the Relations of the Brain to the Size of the Head") + coord_fixed(ratio = 1.5) +
+  annotate("text", x = -Inf, y = Inf, label = text, hjust = 0, vjust = 1) + 
+  annotate("text", x = Inf, y = -Inf, label = text2, hjust = 1, vjust = 0)
+```
+
+We can compute $b$ and $a$ from the other information given on the graph:
+
+$$b = r \frac{s_x}{s_y} = `r cor(brain$HeadSize, brain$BrainWeight)` \times \frac{`r sd(brain$BrainWeight)`}{`r sd(brain$HeadSize)`} = `r cor(brain$HeadSize, brain$BrainWeight)*sd(brain$BrainWeight)/sd(brain$HeadSize)`$$
+
+
+$$a = \overline y - b\overline x = `r mean(brain$BrainWeight)` - `r cor(brain$HeadSize, brain$BrainWeight)*sd(brain$BrainWeight)/sd(brain$HeadSize)` (`r mean(brain$HeadSize)`) = `r mean(brain$BrainWeight) - cor(brain$HeadSize, brain$BrainWeight)*sd(brain$BrainWeight)/sd(brain$HeadSize)*mean(brain$HeadSize)`$$
+
+---
+## Coefficient of Determination $(R^2)$
 
 We can measure how well our data fit our regression line with $R^2$ (which is literally the correlation value, squared). 
 
@@ -807,7 +904,7 @@ Now that we have a regression line, we can talk a bit more about how to characte
 Notice that r provides us with the direction of the relationship, but because it's squared, $R^2$ does not - it is strictly between 0 and 1.
 
 ---
-## Coefficient of Determination
+## Coefficient of Determination $(R^2)$
 
 
 ```{r, fig.width = 8, fig.height = 4, out.width = "100%"}
@@ -832,7 +929,7 @@ Here are a selection of different randomly generated data sets with different R^
 
 
 ---
-## Coefficient of Determination ( $R^2$ )
+## Coefficient of Determination $(R^2)$
 
 $R^2$ can be interpreted as the percentage of variability in $y$ which is explained by the regression line.
 
@@ -872,9 +969,426 @@ brain_sample %>%
 ```
 
 ---
+## Coefficient of Determination $(R^2)$
+
+In math, the last series of graphs can be shown like this: 
+
+$$\underbrace{SSE(y - \overline y)}_\text{total error} = \underbrace{SSE(y - \hat y)}_{\text{residual error}} + \underbrace{SSE(\hat y - \overline y)}_\text{explained by regression}$$
+.small[This is slightly different than the book's notation, where 
+$SSE(y - \overline y) = SSE(\overline y)$ and $SSE(\hat y - \overline y)$ 
+is written as SSE(regression line)]
+
+
+In math, then, we can write $R^2$ as $$R^2 =  100\times\left(1 - \frac{SSE(y - \hat y)}{SSE(y-\overline y)}\right) = 100\times \left(1 - \frac{\text{residual std error}}{\text{total std error}}\right)$$
+
+Notice that this equation works out to equal the proportion of the total error in $y$ explained by the regression.
+
+???
+
+The pictures on the last slide show that you can take the total variability in $y$ and split it into two pieces - the errors explained by the regression, and the errors that aren't explained by the regression. This equation basically says the same thing - we split the total variability (or error) in y into a "regression" piece and a "residual" piece. Then, we can use these pieces to write out a mathematical equation for R^2 - we say that it's the variability explained by the regression as a percent of the total. It's often easier to calculate the residual error, though, so another common form is to say 1 - the percent of the variance remaining (the residuals). 
+
+
+
+---
+## Example: Head Size and Brain Weight
+
+```{r}
+sse <- function(x) sum((x - mean(x))^2)
+
+meansd <- sprintf("\n Mean(x) = %.2f, Sx = %.2f\n Mean(y) = %.2f, Sy = %.2f", mean(brain$HeadSize), sd(brain$HeadSize), mean(brain$BrainWeight), sd(brain$BrainWeight))
+
+ssetxt <- sprintf("\n SSE(y)=%.2f\n SSReg=%.2f\n SSError=%.2f", sse(brain$BrainWeight), sse(brain$BrainWeight) - sse(lreg$residuals), sum(lreg$residuals^2))
+
+text <- ssetxt
+text2 <- sprintf("r=%.4f \n", cor(brain$HeadSize, brain$BrainWeight))
+
+brain %>%
+  ggplot(aes(y = BrainWeight, x = HeadSize)) + geom_point() + 
+  ylab("Brain Weight, grams") + xlab("Head Size, cm^3") + ggtitle("A Study of the Relations of the Brain to the Size of the Head") + coord_fixed(ratio = 1.5) +
+  annotate("text", x = -Inf, y = Inf, label = text, hjust = 0, vjust = 1) + 
+  annotate("text", x = Inf, y = -Inf, label = text2, hjust = 1, vjust = 0)
+```
+
+Let's compute $R^2$ using the SSE formula and check that it's the same as the value of $r$, squared.
+
+---
+## Example: Head Size and Brain Weight
+
+$$R^2 = \frac{SS(\hat y - \overline y)}{SS(y - \overline y)} = \frac{\text{SSReg}}{SSE(y)} = \frac{`r sse(brain$BrainWeight)-sse(lreg$residuals)`}{`r sse(brain$BrainWeight)`} = `r (sse(brain$BrainWeight)-sse(lreg$residuals))/sse(brain$BrainWeight)`$$
+
+<br/><br/>
+
+$$R^2 = r^2 = (.7996)^2 = `r .7996^2`$$
+
+
+---
 ## Exploration 10.3
 
 Work through Exploration 10.3 (ignoring the parts which say compare with classmates) to review the concepts covered in this lecture. 
 
 Upload your answers to Canvas for extra credit.
+
+---
+class:center,middle,inverse
+# 10.4: Inference for the Regression Slope: 
+## Simulation-Based Approach
+
+---
+## Review
+
+Regression equation: $\hat y = a + b x$
+- $\hat y$ is the 
+.hidden[response variable]
+
+- $a$ is the 
+.hidden[intercept]
+
+- $b$ is the 
+.hidden[slope]
+
+- $\hat x$ is the 
+.hidden[explanatory variable]
+
+???
+
+As a review from 10.3, let's look at the equation for a linear regression. yhat = a + b x and remind ourselves what each of these symbols means. 
+
+yhat is the thing we're predicting - the response variable. 
+
+a is the intercept - so when x = 0, we would predict that the response is equal to a. This may or may not make sense in the context of the problem.
+
+b is the slope - so when x increases by 1, our prediction changes by b units.
+
+x is the explanatory variable - this is the thing we want to use to predict y. 
+
+---
+## Review
+
+Regression equation: $\hat y = a + b x$
+- $\hat y$ is the 
+.red[response variable]
+
+- $a$ is the 
+.red[intercept]
+
+- $b$ is the 
+.red[slope]
+
+- $\hat x$ is the 
+.red[explanatory variable]
+
+---
+## Inference for Regression Slope
+
+To test whether two variables are linearly associated, we usually want to know if $b = 0$.
+
+If $b = 0$ then $\hat y = a + 0 x = a$... That is, $x$ doesn't affect $y$ at all.
+
+What happens if we estimate a $b \neq 0$ by chance? 
+
+???
+
+If $b = 0$ then we know that x and y don't appear to be linearly associated. That's because if $b = 0$, our regression equation boils down to $\hat y = a$, which doesn't involve x. 
+
+We can use simulation based inference to test the probability of that occurring, using exactly the same method we used back in 10.2 for the correlation. This is just a different statistic that may be a bit more useful to interpret than the correlation coefficient.
+
+
+---
+## Simulation-based Inference for the Slope
+
+Our null hypothesis is $H_0:$ No relationship between $x$ and $y$, that is, $\beta = 0$    
+$\beta$ is the greek letter corresponding to $b$ - the "true/population slope"
+
+How can we simulate this?
+
+.center[
+<img alt="Data set represented as boxes with x values linked to respective y values" src="figure/Sim-Regression-1.png" height="60%"/>
+]
+
+???
+
+When we have two quantitative variables, our general null hypothesis is that x is not related to y in any way, which means our slope is 0. What does that mean for simulation?
+
+---
+## Simulation-based Inference for the Slope
+
+Our null hypothesis is $H_0:$ No relationship between $x$ and $y$, that is, $\beta = 0$    
+$\beta$ is the greek letter corresponding to $b$ - the "true/population slope"
+
+How can we simulate this?
+
+.center[
+<img alt="Data set represented as boxes with x values linked to different (non-matching) y values" src="figure/Sim-Regression-2.png" height="60%"/>
+]
+
+If there's no relationship between $x$ and $y$, then it doesn't really matter what $x$ value is paired with a given $y$ value... so we can just change which values are paired together.
+
+???
+
+If x and y aren't related, and the value of x doesn't tell us anything about the value of y, then we can just connect x's and ys at random, right?
+
+---
+## Simulation-based Inference for the Slope
+
+Our null hypothesis is $H_0:$ No relationship between $x$ and $y$, that is, $\beta = 0$    
+$\beta$ is the greek letter corresponding to $b$ - the "true/population slope"
+
+How can we simulate this?
+
+.center[
+<img alt="Data set represented as boxes with x values linked to different (non-matching) y values, which have now been reordered" src="figure/Sim-Regression-3.png" height="60%"/>
+]
+
+This is equivalent to shuffling the order of $y$ and creating a new regression
+
+???
+
+This is essentially equivalent to shuffling the y's and keeping the order of the x's the same.
+
+Once we've shuffled the points, we calculate a new slope for our simulated data. Then we compare the simulated slope values to the coefficient from our sample... and if our sample slope is more extreme than most randomly occurring values, we know that there is a linear association between x and y that is unlikely to occur by chance alone
+
+---
+## Summary of Simulation Model
+
+- Null hypothesis: No association between $x$ and $y$ variables ($\beta = 0$)
+
+- One repetition: Re randomizing the response outcomes to the explanatory variable values (randomize $y$ values)
+
+- Statistic: Slope, $b$
+
+???
+
+If we start with the null hypothesis that there's no association between x and y, and one repetition is re-randomizing the values of y to correspond to values of x, we have one repetition is essentially "collecting" a whole new set of data. Just like every other time, right?
+
+The statistic is the slope, the change in y corresponding to a 1-unit change in x. So our statistic might be an imperfect measure of the association between x and y - and we need to be careful to remember that, because if there's some other association between x and y that isn't linear, it might not show up using the slope. 
+
+
+
+---
+## Example: Head Size and Brain Weight
+
+```{r}
+sse <- function(x) sum((x - mean(x))^2)
+
+# text <- sprintf("\n Sx = %.2f\n Sy = %.2f\n SSE(x)=%.2f\n SSE(y)=%.2f", sd(brain$HeadSize), sd(brain$BrainWeight), sse(brain$HeadSize), sse(brain$BrainWeight))
+text2 <- sprintf("r=%.4f \n", cor(brain$HeadSize, brain$BrainWeight))
+
+brain %>%
+  ggplot(aes(y = BrainWeight, x = HeadSize)) + geom_point() + 
+  ylab("Brain Weight, grams") + xlab("Head Size, cm^3") + ggtitle("A Study of the Relations of the Brain to the Size of the Head") + coord_fixed(ratio = 1.5) +
+  # annotate("text", x = -Inf, y = Inf, label = text, hjust = 0, vjust = 1) + 
+  annotate("text", x = Inf, y = -Inf, label = text2, hjust = 1, vjust = 0)
+```
+
+$H_0:$ No linear relationship between head size and brain weight $(\beta = 0)$
+
+$H_A:$ There is a linear relationship between head size and brain weight $(\beta \neq 0)$
+
+???
+
+So if we work a hypothesis test through as an example... we start out assuming there is no linear relationship between head size and brain weight, or $\beta = 0$. Our alternative hypothesis is that there is a linear relationship between head size and brain weight, that is, $\beta \neq 0$
+
+
+
+---
+## Example: Head Size and Brain Weight
+
+1. **Statistic** - slope computed from the sample
+2. **Simulate**
+3. **Strength of evidence** - in how many simulated samples did we get a slope $b^\ast$ with magnitude greater than our sample slope $b$?
+
+```{r, fig.width = 8, fig.height = 4}
+sim_fn <- function(x, y) {
+  cor(x, sample(y, length(y), replace = F)) * sd(y)/sd(x)
+}
+
+actual_cor <- cor(brain$HeadSize, brain$BrainWeight) * sd(brain$BrainWeight)/sd(brain$HeadSize)
+sim_res <- tibble(sim_cor = replicate(1000, sim_fn(x = brain$HeadSize, y = brain$BrainWeight)),
+                  extreme = abs(sim_cor) >= abs(actual_cor))
+
+ggplot(sim_res, aes(x = sim_cor, fill = extreme)) + 
+  geom_histogram(fill = "grey", color = "black", binwidth = .025) + 
+  annotate("segment", x = actual_cor, xend = actual_cor, y = 0, yend = Inf, color = "red") + 
+  annotate("segment", x = actual_cor + .02, xend = .5, y = 150, yend = 150, color = "red", arrow = arrow(length = unit(.25, "cm"))) + 
+  annotate("segment", x = -actual_cor, xend = -actual_cor, y = 0, yend = Inf, color = "red") + 
+  annotate("segment", x = -actual_cor - .02, xend = -.5, y = 150, yend = 150, color = "red", arrow = arrow(length = unit(.25, "cm"))) + 
+  xlab("Simulated Slope") + ylab("# Simulations")
+
+```
+
+In 0 samples out of 1000, $|b^\ast| > 0.263$, so $p < 0.001$ 
+
+???
+
+To sum this up, if we go to our 3s strategy, we start with a statistic - the correlation coefficient, r. We simulate by shuffling the y variable values around, and come up with a simulated distribution of the correlation coefficient under the null hypothesis that x and y don't have a linear relationship. Then, we compare our statistic to that distribution to get an assessment of the strength of the evidence.
+
+So when I did 1000 simulations of the correlation coefficient for our brain and head size data, I got a distribution that looked like this... basically, there is no way that our linear relationship that was observed in the data could have arisen by chance. It's just not possible - p is too small, and even if we ran a million simulations, we still wouldn't get a nonzero p. 
+
+---
+## Example: Head Size and Brain Weight
+
+Conclusion: 
+
+I reject $H_0$ that there is no linear relationship between head size and brain weight with $p < 0.001$. There is very strong evidence that the linear relationship observed between the variables did not occur due to random chance, thus, we must conclude that there is a linear relationship between head size and brain weight.
+
+--
+
+Note that this is the same interpretation (word for word) as we used in Section 10.2
+
+
+---
+class:center,middle,inverse
+# 10.5: Inference for the Regression Slope: 
+## Theory-Based Approach
+
+---
+## Requirements for Theory-Based Inference
+
+### Validity conditions:
+
+- general pattern of the points should follow a linear trend (no curved or nonlinear patterns)
+- about the same number of points above and below the regression line (symmetry)
+- variability of points around the regression line should be similar regardless of the value of $x$ (equal variance)
+
+---
+## Requirements for Theory-Based Inference
+
+
+- general pattern of the points should follow a linear trend (no curved or nonlinear patterns)
+
+```{r, fig.width = 8, fig.height = 2.5, out.width = "100%"}
+set.seed(20200404)
+d2 <- read_csv("../data/Datasaurus_data.csv", col_names = FALSE) %>% set_names(c("x", "y"))
+dat <- tibble(Form = rep(c("Linear", "Quadratic", "Periodic"), each = 100),
+              x = rep(rnorm(100, seq(-5, 6, length.out = 100), sd = .2), times = 3),
+              y = rnorm(300, ifelse(Form == "Linear", x, ifelse(Form == "Quadratic", x^2 * 1/6 - 3, 5*sin(x))), 1)) %>%
+  bind_rows(mutate(d2, Form = "Dinosaur")) %>%
+  group_by(Form) %>%
+  mutate(x = scale(x), y = scale(y)) %>%
+  ungroup() %>%
+  mutate(Form = factor(Form, levels = c("Linear", "Quadratic", "Periodic", "Dinosaur"), 
+                       labels = c("Linear (ok)", "Quadratic (no)", "Periodic (no)", "Dinosaur (no)")))
+
+ggplot() + 
+  geom_point(data = dat, aes(x = x, y = y)) + 
+  facet_wrap(~Form, labeller = label_both, ncol = 4) + 
+  theme(axis.title = element_blank()) + coord_fixed(xlim = c(-2, 2), ylim = c(-2, 2)) 
+```
+
+
+---
+## Requirements for Theory-Based Inference
+
+
+```{r, fig.width = 6, fig.height = 4, out.width = "60%"}
+set.seed(20200404)
+dat <- tibble(Form = rep(c("Symmetric", "Asymmetric"), each = 200),
+              x = rep(rnorm(200, seq(-5, 6, length.out = 100), sd = .2), times = 2),
+              offset = c(rep(0, 200), sample(c(-5, 0), size = 200, replace = T, prob = c(0.1, .9))),
+              y = rnorm(400, x, 0.5) + offset) %>%
+  # group_by(Form) %>%
+  # mutate(x = scale(x), y = scale(y)) %>%
+  # ungroup() %>%
+  mutate(Form = factor(Form, levels = c("Symmetric", "Asymmetric"), 
+                       labels = c("Symmetric (ok)", "Asymmetric (no)")))
+
+ggplot(data = dat, aes(x = x, y = y)) + 
+  geom_point() + 
+  facet_wrap(~Form, ncol = 2) + 
+  theme(axis.title = element_blank()) + 
+  geom_smooth(method = "lm", se = F)
+```
+
+---
+## Requirements for Theory-Based Inference
+
+
+```{r, fig.width = 6, fig.height = 4, out.width = "60%"}
+set.seed(20200404)
+dat <- tibble(Form = rep(c("Equal Variance", "Changing Variance"), each = 200),
+              x = rep(rnorm(200, seq(-5, 6, length.out = 100), sd = .2), times = 2),
+              sd = ifelse(Form == "Equal Variance", 0.5, .5*(x - min(x))),
+              y = rnorm(400, x, sd)) %>%
+  # group_by(Form) %>%
+  # mutate(x = scale(x), y = scale(y)) %>%
+  # ungroup() %>%
+  mutate(Form = factor(Form, levels = c("Equal Variance", "Changing Variance"), 
+                       labels = c("Equal Variance (ok)", "Changing Variance (not ok)")))
+
+ggplot(data = dat, aes(x = x, y = y)) + 
+  geom_point() + 
+  facet_wrap(~Form, ncol = 2) + 
+  theme(axis.title = element_blank()) + 
+  geom_smooth(method = "lm", se = F)
+```
+
+
+---
+## Requirements for Theory-Based Inference
+
+Looking at the residuals from your regression can be more useful:
+```{r, fig.width = 6, fig.height = 4, out.width = "60%"}
+set.seed(20200404)
+dat <- tibble(Form = rep(c("Equal Variance", "Changing Variance"), each = 200),
+              x = rep(rnorm(200, seq(-5, 6, length.out = 100), sd = .2), times = 2),
+              sd = ifelse(Form == "Equal Variance", 0.5, .5*(x - min(x))),
+              y = rnorm(400, 0, sd)) %>%
+  # group_by(Form) %>%
+  # mutate(x = scale(x), y = scale(y)) %>%
+  # ungroup() %>%
+  mutate(Form = factor(Form, levels = c("Equal Variance", "Changing Variance"), 
+                       labels = c("Equal Variance (ok)", "Changing Variance (not ok)")))
+
+ggplot(data = dat, aes(x = x, y = y)) + 
+  geom_point() + 
+  facet_wrap(~Form, ncol = 2) + 
+  theme(axis.title = element_blank())
+```
+
+---
+## Theory-Based Inference
+
+We also need a formula for the standard error of our statistic, $r$
+
+$$SE(r) = \sqrt{\frac{1-r^2}{n-2}}$$
+
+Then, $$t = \frac{r}{SE(r)}$$
+
+Because $t$ can be calculated from either the slope or the correlation coefficient, the tests are identical. 
+
+We could also make a theory-based confidence interval for $r$ using the standard error.
+
+---
+## Theory-Based Inference
+
+If we work with $b$, we will be given $SE(b)$ by statistical software:
+
+```{r, results = 'markup'}
+coef(summary(lreg))
+```
+
+
+Then, $$t = \frac{b - 0}{SE(b)}$$
+
+.small[Or, just get t (and the corresponding p-value) from the table...]
+
+Because $t$ can be calculated from either the slope or the correlation coefficient, the tests are identical. 
+
+We could also make a theory-based confidence interval for $t$ using the standard error.
+
+---
+## Theory-Based Inference
+
+Hypothesis test interpretation:
+
+With .underline[t = ...], I have .underline[(strength)] evidence to suggest that there is a linear relationship between 
+.underline[(explanatory variable)] and .underline[(response variable)]. I .underline[(accept/reject)] 
+$H_0$ 
+and conclude that .underline[(conclusion in context of the problem)]
+
+<br/><br/>
+
+Confidence interval interpretation:
+
+I am 95% confident that as .underline[explanatory variable] increases by 1 unit, the predicted population average value of .underline[response variable] will change by between .underline[(lower bound of b interval)] and .underline[(upper bound of b interval)]
 
