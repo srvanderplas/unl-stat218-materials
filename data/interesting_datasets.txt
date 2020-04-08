@@ -7,3 +7,10 @@ https://www.improbable.com/2020/02/21/benefits-of-tapping-on-an-un-opened-beer-c
 Proportion data: Elephants getting math problems correct.  https://www.springer.com/gp/about-springer/media/research-news/all-english-research-news/asian-elephants-could-be-the-maths-kings-of-the-jungle/16208962
 
 http://users.stat.ufl.edu/~winner/datasets.html - whole bunch of interesting datasets
+
+
+https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0046362 - Difference in quantitative variables - task performance in response to images of varying levels of cuteness.
+
+
+https://onlinelibrary.wiley.com/doi/full/10.1002/smi.2804 - Paired data on therapy dog sessions and student exam stress
+
