@@ -224,6 +224,13 @@ For each observation, we look at the deviation from the mean in x, divide by the
 
 
 ---
+## Correlation is not Causation
+
+Just in case you haven't heard this chant yet, "correlation is not causation". Say it a few times. 
+
+It's important to remember that correlation is a measure of association, but that doesn't mean there's any causal factors involved. In some cases, the choice of explanatory and response variables are arbitrary.
+
+---
 ## Outliers and Influential Observations
 
 ![XKCD - Outliers](https://imgs.xkcd.com/comics/boyfriend.png)
@@ -448,7 +455,8 @@ So when I did 1000 simulations of the correlation coefficient for our brain and 
 
 Conclusion: 
 
-I reject `\(H_0\)` that there is no linear relationship between head size and brain weight with `\(p &lt; 0.001\)`. There is very strong evidence that the linear relationship observed between the variables did not occur due to random chance, thus, we must conclude that there is a linear relationship between head size and brain weight.
+I reject `\(H_0\)` that there is no linear relationship between head size and brain weight with `\(p &lt; 0.001\)`. There is very strong evidence that the linear relationship observed between the variables did not occur due to random chance, thus, we must conclude that there is a linear relationship between head size and brain weight, that is, that `\(\rho \neq 0\)`.
+
 
 
 ---
@@ -717,6 +725,10 @@ The pictures on the last slide show that you can take the total variability in `
 
 Let's compute `\(R^2\)` using the SSE formula and check that it's the same as the value of `\(r\)`, squared.
 
+???
+
+Pause this video and try to use the formula on the previous slide to compute R^2 given the information on the chart.
+
 ---
 ## Example: Head Size and Brain Weight
 
@@ -726,6 +738,11 @@ Let's compute `\(R^2\)` using the SSE formula and check that it's the same as th
 
 `$$R^2 = r^2 = (.7996)^2 = 0.639$$`
 
+???
+
+You should have taken SSreg (sum of squares regression) and divided by the total sum of squares, then multiplied by 100. Alternately, you could do 100 times 1 - sse (sum of squared errors)/total sum of squares, which would get you the same thing. 
+
+If we then just square the correlation, we get again, the same value for R^2. 
 
 ---
 ## Exploration 10.3
@@ -815,6 +832,8 @@ How can we simulate this?
 
 When we have two quantitative variables, our general null hypothesis is that x is not related to y in any way, which means our slope is 0. What does that mean for simulation?
 
+It means we simulate exactly the same way as we did for the correlation coefficient, but instead of computing `\(r\)` we compute `\(b\)` as our summary statistic. Then, we interpret `\(b\)` instead of `\(r\)`. If you remember what we did with two proportions, the same concept applies - we can compute the difference or the relative risk, but the underlying simulation process is the same.
+
 ---
 ## Simulation-based Inference for the Slope
 
@@ -898,7 +917,7 @@ In 0 samples out of 1000, `\(|b^\ast| &gt; 0.263\)`, so `\(p &lt; 0.001\)`
 
 ???
 
-To sum this up, if we go to our 3s strategy, we start with a statistic - the correlation coefficient, r. We simulate by shuffling the y variable values around, and come up with a simulated distribution of the correlation coefficient under the null hypothesis that x and y don't have a linear relationship. Then, we compare our statistic to that distribution to get an assessment of the strength of the evidence.
+If we go to our 3s strategy, we start with a statistic - the slope, b. We simulate by shuffling the y variable values around, and come up with a simulated distribution of the correlation coefficient under the null hypothesis that x and y don't have a linear relationship. Then, we compare our statistic to that distribution to get an assessment of the strength of the evidence.
 
 So when I did 1000 simulations of the correlation coefficient for our brain and head size data, I got a distribution that looked like this... basically, there is no way that our linear relationship that was observed in the data could have arisen by chance. It's just not possible - p is too small, and even if we ran a million simulations, we still wouldn't get a nonzero p. 
 
@@ -907,7 +926,7 @@ So when I did 1000 simulations of the correlation coefficient for our brain and 
 
 Conclusion: 
 
-I reject `\(H_0\)` that there is no linear relationship between head size and brain weight with `\(p &lt; 0.001\)`. There is very strong evidence that the linear relationship observed between the variables did not occur due to random chance, thus, we must conclude that there is a linear relationship between head size and brain weight.
+I reject `\(H_0\)` that there is no linear relationship between head size and brain weight with `\(p &lt; 0.001\)`. There is very strong evidence that the linear relationship observed between the variables did not occur due to random chance, thus, we must conclude that there is a linear relationship between head size and brain weight, that is, that `\(\beta \neq 0\)`.
 
 --
 
@@ -1005,6 +1024,26 @@ and conclude that .underline[(conclusion in context of the problem)]
 Confidence interval interpretation:
 
 I am 95% confident that as .underline[explanatory variable] increases by 1 unit, the predicted population average value of .underline[response variable] will change by between .underline[(lower bound of b interval)] and .underline[(upper bound of b interval)]
+
+---
+## Example: Head Size and Brain Weight
+
+
+
+```
+##             Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept)  325.573    47.1409    6.91 4.61e-11
+## HeadSize       0.263     0.0129   20.41 5.96e-54
+```
+
+We can see that the t value is 20.409, which corresponds to extremely strong evidence that there is a relationship between head size and brain weight.
+
+
+If we wanted to make a 95% CI for the slope of the line (e.g. for the increase in brain weight when head size increases by 1 cm^3), we could use the 2*SE method:
+
+`$$0.263 \pm 2 * 0.0129 = (0.237, 0.289)$$`
+
+I am 95% confident that the population average brain weight will increase by between 0.237 and 0.289 grams for each additional cubic centimeter of head size.
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
