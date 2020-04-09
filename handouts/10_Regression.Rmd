@@ -10,7 +10,7 @@ params:
 
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = F, message = F, warning = F)
+knitr::opts_chunk$set(echo = F, message = F, warning = F, dev = "png")
 library(tidyverse)
 options(digits = 3)
 ```
@@ -27,3 +27,28 @@ if (params$key) {
 }
 
 ``` 
+
+
+# Math on LSD
+
+In the 1960s, there was considerable research into the effects of drugs such as LSD. In one experiment, researchers gave a group of 5 volunteers 2 micrograms of LSD intravenously, and then administered math tests to the participants at 7 timepoints (5, 15, 30, 60, 120, 240, 480 minutes) while measuring the concentration of LSD in the volunteers bloodstream. The average of the 5 scores, and the average concentration of LSD were recorded. 
+
+```{r lsd-plot, fig.height = 3}
+lsd <- read_table("http://users.stat.ufl.edu/~winner/data/lsd.dat", col_names = c("LSD", "Score"))
+qplot(data = lsd, x = LSD, y = Score) + xlab("LSD Concentration") + ylab("Math Test Score")
+```
+
+1. What is the explanatory variable? What is the response variable?    
+\longanswer\answer{The explanatory variable is average LSD concentration in the bloodstream across subjects. The response variable is average math test score.}
+
+2. Is this an experiment? Does it have random sampling? Random assignment?        
+\longanswer[8em]\answer{This is an experiment, because researchers are intervening and assigning treatments to participants. It does not have random sampling (the participants are volunteers). It also does not have random assignment - while the researchers are assigning treatments (LSD injection, observation intervals) they do not control the LSD concentration directly, so they are not assigning levels of the explanatory variable to the response variable.}
+
+3. What conclusions can you make as a result of this experimental design? What conclusions can you not make? Why?    
+\longanswer[8em]\answer{We cannot make causal inferences (because we lack random assignment). We can argue for generalizing this result to the population, with the argument that LSD concentration would be expected to decrease similarly in all humans with normal metabolisms, but we have to make the argument - it is not a given that our sample generalizes to our population because we do not have a random sample of the population.}
+
+4. Describe the relationship between LSD concentration and math test score (form, direction, strength, high influence points)    
+\longanswer[4em]\answer{There is a negative linear relationship between LSD concentration and math test score; while it is difficult to determine the strength because there are only 7 points, it does appear that most of the points lie very close to the imaginary line of best fit. There are no high influence points (there are only 7 points, so that isn't remarkable).} 
+
+5. What do you know at this point about the correlation coefficient? What do you know about the value of $b$, the slope of the regression line?    
+\longanswer[4em]\answer{The direction of the relationship is negative, which means that the correlation coefficient, $r$, as well as the slope}
