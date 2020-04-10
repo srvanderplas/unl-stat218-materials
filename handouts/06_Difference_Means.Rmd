@@ -105,9 +105,9 @@ Read the Introduction, Method, and the 1st paragraph of the Results sections of 
 2. Was random sampling, random assignment, both, or neither used in this study? What are the implications?    
 \longanswer[6em]\answer{This study used volunteers, so there was no random sampling; the researchers may not be able to generalize their results to the population if the sample was not representative. However, random assignment was used, so the researchers can make cause-and-effect claims about the treatment. }
 
-3. What is/are the explanatory variable(s)? How are they calculated? (You may have to read the additional information about the IAT) What does this variable mean in real life?    
-\longanswer[14em]\answer{The explanatory variable is the IAT score - the difference between the mean response time between "me" and vampires (and "not me" and wizards) and the mean response time between "me" and wizards (and "not me" and vampires). The IAT score is the amount an individual identifies themselves with the concept of vampires (high score) compared with wizards (low score).\\[.5em]
-A second explanatory variable is the Twilight/Harry Potter Narrative Collective-Assimilation Score, which was designed by the researchers. This score was computed as the difference between the participant's z-score for wizard items and the participant's z-score for vampire items.}
+3. What is/are the response variable(s)? How are they calculated? (You may have to read the additional information about the IAT) What does this variable mean in real life?    
+\longanswer[14em]\answer{The response variable is the IAT score - the difference between the mean response time between "me" and vampires (and "not me" and wizards) and the mean response time between "me" and wizards (and "not me" and vampires). The IAT score is the amount an individual identifies themselves with the concept of vampires (high score) compared with wizards (low score).\\[.5em]
+A second response variable is the Twilight/Harry Potter Narrative Collective-Assimilation Score, which was designed by the researchers. This score was computed as the difference between the participant's z-score for wizard items and the participant's z-score for vampire items.}
 
 ***
 
