@@ -24,11 +24,11 @@ theme_set(theme_bw())
 
 
 .large[By Section]
-- 10.1: [start](#3) - [end](#15)
-- 10.2: [start](#16) - [end](#36)
-- 10.3: [start](#37) - [end](#49)
-- 10.4: [start](#50) - [end](#51)
-- 10.5: [start](#52) - [end](#53)
+- 10.1: [start](#3) - [end](#20)
+- 10.2: [start](#21) - [end](#32)
+- 10.3: [start](#33) - [end](#51)
+- 10.4: [start](#52) - [end](#62)
+- 10.5: [start](#63) - [end](#74)
 
 ???
 
