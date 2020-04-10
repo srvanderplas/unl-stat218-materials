@@ -1063,7 +1063,7 @@ Regression equation: $\hat y = a + b x$
 - $b$ is the 
 .hidden[slope]
 
-- $\hat x$ is the 
+- $x$ is the 
 .hidden[explanatory variable]
 
 ???
@@ -1400,7 +1400,7 @@ Then, $$t = \frac{r}{SE(r)}$$
 
 Because $t$ can be calculated from either the slope or the correlation coefficient, the test results will be identical. 
 
-We could also make a theory-based confidence interval for $r$ using the standard error.
+We could also make a theory-based confidence interval for $\rho$ using the standard error.
 
 ???
 
@@ -1424,7 +1424,7 @@ Then, $$t = \frac{b - 0}{SE(b)}$$
 
 Because $t$ can be calculated from either the slope or the correlation coefficient, the tests are identical. 
 
-We could also make a theory-based confidence interval for $t$ using the standard error.
+We could also make a theory-based confidence interval for $\beta$ using the standard error.
 
 ???
 
