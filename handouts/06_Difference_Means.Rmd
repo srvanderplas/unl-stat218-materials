@@ -5,7 +5,7 @@ output:
     template: template.tex
 geometry: margin=1in,headsep=.2in
 params:
-  key: true
+  key: false
 ---
 
 ```{r fix-latex, results='asis', echo = F, message = F}
@@ -81,7 +81,7 @@ Note that the researchers want to test whether goats also display a **preference
 \longanswer\answer{(Answers will vary) 20/1000 samples had a value greater than the observed value, so the simulation p-value is 0.0200. }
 
 10. Construct and interpret an approximately 95% **simulation** confidence interval for the amount of extra time goats spent around the happy human face. Show your work.    
-\longanswer[10em]\answer{From the applet, my sample statistic is `r sstat` and the simulation standard error of the difference is 8.179 (will vary slightly). Thus, an approximately 95\% confidence interval is $`r sstat` \pm 2\times 8.179 = (`r paste(round(sstat + c(-2, 2)*8.179, 3), collapse = ", ")`)$. Thus, we are 95\% confident that goats spend between `r sstat + c(-2)*8.179` and `r sstat + c(2)*8.179` seconds longer around a picture of a happy human face than an angry human face. This suggests that goats can, indeed, read human social cues. }
+\longanswer[10em]\answer{From the applet, my sample statistic is `r sstat` and the simulation standard error of the difference is 8.179 (will vary slightly). Thus, an approximately 95\% confidence interval is $`r sstat` \pm 2\times 8.179 = (`r paste(round(sstat + c(-2, 2)*8.179, 3), collapse = ", ")`)$. Thus, we are 95\% confident that goats spend between `r sstat + c(-2)*8.179` and `r sstat + c(2)*8.179` seconds longer around a picture of a happy human face than an angry human face. This suggests that goats can, indeed, read human social cues. }\clearpage
 
 11. What are the validity conditions for theory-based inference for this type of data? Are they met? Why or why not?    
 \longanswer[10em]\answer{Both groups should have a symmetric distribution, or there should be 20 observations in each group and the distributions should not be strongly skewed. From the boxplot, it appears that both distributions are roughly symmetric, suggesting that we can use theory based inference for the problem. If the distributions were not roughly symmetric, then we would not be able to use theory-based inference because we have only `r tsum$n[1]` and `r tsum$n[2]` observations in each group, respectively.}
@@ -91,7 +91,7 @@ Note that the researchers want to test whether goats also display a **preference
 
 13. Using theory-based inference, calculate a standardized t-statistic and conduct a test of the null hypothesis in question 5. Interpret your result.    
 \longanswer[10em]\answer{$t = \displaystyle\frac{\overline x_h - \overline x_a - 0}{SE} = \displaystyle\frac{`r sstat`}{`r pooled_se`} = `r sstat/pooled_se`$. \\[.5em]
-With a standardized statistic of `r sstat/pooled_se`, we have strong evidence against $H_0$ that goats spend equal amounts of time around happy and angry human faces, and thus cannot read human social cues. Therefore, we reject $H_0$ and conclude that goats spend significantly more time around happy human faces than angry human faces, suggesting that goats can, in fact, read social cues.}
+With a standardized statistic of `r sstat/pooled_se`, we have strong evidence against $H_0$ that goats spend equal amounts of time around happy and angry human faces, and thus cannot read human social cues. Therefore, we reject $H_0$ and conclude that goats spend significantly more time around happy human faces than angry human faces, suggesting that goats can, in fact, read social cues.}\clearpage
 
 
 
