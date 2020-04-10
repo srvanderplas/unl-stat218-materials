@@ -73,7 +73,8 @@ INDEXTARGET      = $(INDEXSOURCE:%.Rmd=%.html)
 TARGETLIST      += $(INDEXTARGET)
 
 %.html: %.Rmd
-	Rscript -e "rmarkdown::render('$<')"
+	Rscript -e "rmarkdown::render('$<', output_file = '$*', \
+	                              output_dir = '$(@D)')
 
 # ------------------------------------------------------------------------------
 
