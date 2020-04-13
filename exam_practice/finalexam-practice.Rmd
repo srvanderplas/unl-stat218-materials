@@ -1,0 +1,164 @@
+---
+output: 
+  pdf_document: 
+    df_print: kable
+    keep_tex: yes
+    latex_engine: xelatex
+    template: exam-template.tex
+course: "Stat 218"
+exam: "Final Exam"
+geometry: margin=1in
+params:
+  version: 1
+  key: false
+---
+---
+version_str: `r ifelse(params$key, "Practice - KEY", "Practice Exam")`
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F, dpi = 300, fig.path=sprintf("figure/Ex2-Practice-"))
+library(tidyverse)
+theme_set(theme_bw())
+options(digits=3, scipen=999)
+```
+
+```{r fix-latex, results='asis'}
+if (params$key) {
+  cat("\\newcommand{\\answer}[1]{{\\color{red}\\emph{#1}}}")
+  cat("\\providecommand{\\tightlist}{\\setlength{\\itemsep}{1em}\\setlength{\\parskip}{0pt}}")
+  cat("\\lhead{Name: \\color{red}{KEY}}")
+  cat("\\fancypagestyle{firststyle}")
+  cat("{\\lhead{Name:\\color{red}{KEY}}}")
+} else {
+  # cat("\\newcommand{\\answer}[1]{{\\color{white}#1}}") 
+  cat("\\newcommand{\\answer}[1]{{\\leavevmode\\protect\\phantom{#1}}}")
+  cat("\\providecommand{\\tightlist}{\\setlength{\\itemsep}{1em}\\setlength{\\parskip}{0pt}}")
+}
+
+```
+
+
+```{r define-variables, include = F, cache = F}
+set.seed(34028473)
+# Need to add table of true/false q's here
+
+true_false_qs <- tribble(
+  ~statement, ~answer, ~chapter,
+  "A confidence interval is the set of all possible values for the parameter", F, 3,
+  "A parameter value is not plausible if it produces a small two-sided p-value when tested in a null hypothesis test", T, 3,
+  "If a hypothesis test for a value $\\pi$ leads to a rejection of $H_0$ at the $\\alpha$ level, the value $\\pi$ will be in the corresponding $(1-\\alpha)\\times 100$\\% confidence interval", F, 3,
+  "Using a higher confidence level produces a wider interval of plausible values", T, 3,
+  "If a statistic A has a smaller standard error than statistic B, the width of the 95\\% interval for A will be smaller than the 95\\% interval for B", T, 3,
+  "There is a 5\\% probability that the true parameter value falls outside the 95\\% confidence interval for that value", F, 3,
+  "To use a theory-based interval for a proportion, there have to be 10 successes and 10 failures", T, 3,
+  "The midpoint of a confidence interval is the parameter value", F, 3,
+  "You cannot create a theory-based confidence interval for a population mean if you have 15 observations and a symmetric distribution", F, 3,
+  "You can create a confidence interval for a population mean if you have 15 observations and a skewed distribution", F, 3,
+  "The width of the confidence interval increases when the sample size decreases", T, 3,
+  "2 $\times$ SE is called the margin of estimation", F, 3,
+  "A confounding variable is a variable that is related to only the explanatory variable", F, 4, 
+  "In an experiment, statistics can be used to make cause-and-effect claims", T, 4,
+  "A balanced study is one with the same distribution of a confounding variable in the study as in the population", F, 4,
+  "A representative sample is required to make unbiased inference about the population", T, 4,
+  "Sampling bias occurs when there is not random assignment", F, 4,
+  "A quasi-experiment is one that manipulates the explanatory variable and uses random assignment of treatments to groups", F, 4,
+  "An experiment is a study in which subjects are not randomly assigned to treatment groups or conditions", F, 4,
+  "The usual null hypothesis when comparing two proportions is $H_0: \\mu_1 - \\mu_2 = 0$", F, 5,
+  "The relative risk is one way to summarize the association between two quantitative variables", F, 5,
+  "In order to use theory-based inference when estimating the difference in two proportions, we must have a total of 40 observations with at least 10 observations in each group", T, 5,
+  "There are validity conditions for using simulation-based inference for the difference between two proportions", F, 5,
+  "We examine the difference in proportions across treatment groups because we want to know what proportion of people in the population respond to treatment.", F, 5
+)
+
+```
+
+<!-- # Formula sheet -->
+<!-- \begin{tabularx}{\textwidth}{|l|X|X|}\cline{2-3} -->
+<!-- \multicolumn{1}{c|}{} & \multicolumn{2}{c|}{Single Variable} \\\cline{2-3} -->
+<!-- \multicolumn{1}{c|}{} & Proportion & Quantitative \\\hline -->
+<!-- Statistic & $\hat p = \displaystyle\frac{\text{Num. successes}}{n}$ & $\overline x = \frac{\sum x}{n}$, where $\sum x$ is the sum of all observations in the sample\\ -->
+<!-- & & \\ -->
+<!-- \pbox{1in}{Standard\\Error} & $SE(\hat p) = \displaystyle\sqrt\frac{\hat p(1-\hat p)}{n}$ & $SE(\overline x) = \displaystyle\frac{s}{\sqrt{n}}$\\ -->
+<!-- & & \\ -->
+<!-- \pbox{1.25in}{Standardized\\Statistic} & $z = \displaystyle\frac{\hat p - \pi_0}{\sqrt{\pi_0 (1-\pi_0)/n}}$ & $t = \displaystyle\frac{\overline x - \mu_0}{s/\sqrt{n}}$\\ -->
+<!-- \hline -->
+<!-- Theory-Based CI & \multicolumn{2}{c|}{$\text{statistic} \pm 2 \times SE(\text{statistic})$}\\\hline -->
+<!-- \end{tabularx} -->
+<!-- \vfil -->
+<!-- \begin{tabularx}{\textwidth}{|Y|Y|}\hline -->
+<!-- \multicolumn{2}{|c|}{Difference in proportions}\\\hline -->
+<!-- Overall proportion of successes & Standardized Statistic \\ -->
+<!-- $\hat p = \displaystyle\frac{n_1 \hat p_1 + n_2 \hat p_2}{n_1 + n_2}$ & $z = \displaystyle\frac{\hat p_1 - \hat p_2 - 0}{\sqrt{\hat p (1-\hat p)\left(\frac{1}{n_1} + \frac{1}{n_2}\right)}}$ \\\hline -->
+<!-- \multicolumn{2}{|c|}{Theory Based CI}\\ -->
+<!-- \multicolumn{2}{|c|}{$\hat p_1 - \hat p_2 \pm 2 \times \sqrt{\displaystyle\frac{\hat p_1(1-\hat p_1)}{n_1} + \frac{\hat p_2(1-\hat p_2)}{n_2}}$}\\\hline -->
+<!-- \end{tabularx} -->
+<!-- \clearpage -->
+<!-- # Concepts -->
+
+<!-- \vspace{-2em}\hfill{\underline{\hspace{1in}}\large /15} -->
+
+<!-- Circle T (true) or F (false) for each of the following statements[1pt each]:\vspace{1em} -->
+
+<!-- \begin{description}[align=right,labelindent=5em,leftmargin=!]\raggedright -->
+<!-- ```{r results='asis', eval = F} -->
+<!-- set.seed(502973) -->
+<!-- ordered_sample <- true_false_qs %>% -->
+<!--   group_by(chapter) %>%  -->
+<!--   sample_n(size = 5, replace = F) %>% -->
+<!--   mutate(ans = ifelse(answer, "T\\hspace{1em}\\phantom{F}", "\\phantom{T}\\hspace{1em}F")) -->
+<!-- if (!params$key) { -->
+<!--   cat(paste(sprintf("\\item[T\\hspace{1em}F\\hspace{1em}] %s\\vfill", ordered_sample$statement),  -->
+<!--   collapse = " -->
+
+<!-- ")) } else { -->
+<!--   cat(paste(sprintf("\\item[{\\color{red} %s\\hspace{1em}}] %s\\vfill", ordered_sample$ans, ordered_sample$statement),  -->
+<!--   collapse = " -->
+
+<!-- ")) -->
+<!-- } -->
+
+<!-- ``` -->
+<!-- \end{description} -->
+<!-- \clearpage -->
+
+# Itchy Pups
+
+A veterinary medicine company is doing final trials of a new type of flea and tick medication. In trials of new medicine, it is common to compare the results to the current "gold standard" of treatment, that is, the current commonly used medication. The company recruits 60 dogs who are randomly selected from the population of current canine customers, and randomly assigns 30 of them to receive the new treatment and 30 to receive the old treatment. Each pup receives 60 days of medication; after the first 30 days, which are necessary for the treatment to take effecct, the dogs are monitored to assess how many times a day they scratch themselves. The 30 days of scratch counts are averaged together for each dog, and the distribution of average number of scratches are shown below.
+
+```{r fig.width = 8, fig.height = 4, out.width = "100%"}
+pup <- tibble(
+  trt = rep(c("Orig", "New"), each = 30),
+  scratch = rnorm(60, mean = rep(c(10, 5), each = 30), sd = 2)
+)
+
+ggplot(data = pup, aes(x = scratch, fill = trt)) + geom_histogram(binwidth = .5, color = "black") + facet_grid(trt~.) + ylab("# pups") + xlab("Average # Scratches") + scale_fill_discrete("Treatment", guide = F)
+```
+
+1. What is the population of interest?    
+\longanswer\answer{The company's current canine customers. (Also acceptable - all canines)}
+
+2. Which group has the largest median? Draw a vertical line corresponding to the approximate median on the chart.    
+\longanswer[6em]\answer{The original group has the largest median. The vertical line for the new group should be at approximately `r median(filter(pup, trt == "New")$scratch)` and the vertical line for the original group should be at approximately `r median(filter(pup, trt != "New")$scratch)`.}
+
+3. Suppose we would like to compare the average itchiness of the pups receiving the original treatment to the average itchiness of pups receiving the new treatment (Original - New). What is the parameter of interest, in words and in symbols?    
+\longanswer[6em]\answer{The population mean itchiness of pups receiving the original treatment minus the population mean itchiness of pups receiving the new treatment, or $\mu_o - \mu_n$ where $\mu_o$ is the population mean itchiness of pups receiving the original treatment and $\mu_n$ is the population mean itchiness of pups receiving the new treatment.}
+
+4. Set up the appropriate null and alternative hypotheses to examine the parameter of interest.    
+\longanswer\answer{$H_0: \mu_o - \mu_n = 0$\\$H_A: \mu_o - \mu_n \neq 0$}
+
+5. Are theory-based validity conditions met for this problem?    
+\longanswer[8em]\answer{Yes. The validity conditions are either (1) symmetric distribution of both groups or (2) 20 observations for each group and a distribution which is not too skewed for each group. The data were actually simulated from a symmetric distribution, so technically (1) is met, but if we didn't know that, we can definitely say that (2) is met because we have 30 observations per group and the distributions are not too skewed. }
+
+6. Suppose that the new group of pups scratches on average `r mean(filter(pup, trt == "New")$scratch)` times per day (SD = `r sd(filter(pup, trt == "New")$scratch)`) and the old group of pups scratches on average `r mean(filter(pup, trt != "New")$scratch)` times per day (SD = `r sd(filter(pup, trt != "New")$scratch)`). What is the observed statistic?    
+\longanswer\answer{$\overline x_o - \overline x_n = `r mean(filter(pup, trt != "New")$scratch)` - `r mean(filter(pup, trt == "New")$scratch)` = `r mean(filter(pup, trt != "New")$scratch) -mean(filter(pup, trt == "New")$scratch)`$}
+
+7. What is the standard deviation of the difference (i.e. the standard deviation of the statistic?)    
+\longanswer\answer{
+$\displaystyle\sqrt{\frac{s^2_o}{n_o} + \frac{s^2_n}{n_n}} = \displaystyle\sqrt{\frac{(`r sd(filter(pup, trt != "New")$scratch)`)^2}{30} + \frac{(`r sd(filter(pup, trt == "New")$scratch)`)^2}{30}} = \sqrt{`r var(filter(pup, trt != "New")$scratch)/30` + `r var(filter(pup, trt == "New")$scratch)/30`} = `r sqrt(var(filter(pup, trt != "New")$scratch)/30 +  var(filter(pup, trt == "New")$scratch)/30)`$}
+
+8. What is the test statistic, $t$?    
+\longanswer\answer{$t = \displaystyle\frac{\overline x_o - \overline x_n - 0}{SE(\overline x_o - \overline x_n)} = \displaystyle\frac{`r mean(filter(pup, trt != "New")$scratch)- mean(filter(pup, trt == "New")$scratch)`}{`r sqrt(var(filter(pup, trt != "New")$scratch)/30 +  var(filter(pup, trt == "New")$scratch)/30)`} = `r (mean(filter(pup, trt != "New")$scratch)- mean(filter(pup, trt == "New")$scratch))/(sqrt(var(filter(pup, trt != "New")$scratch)/30 +  var(filter(pup, trt == "New")$scratch)/30))`$}
+
+9. What is your conclusion in the context of the study?    
+\longanswer[6em]\answer{With $t = `r (mean(filter(pup, trt != "New")$scratch)- mean(filter(pup, trt == "New")$scratch))/(sqrt(var(filter(pup, trt != "New")$scratch)/30 +  var(filter(pup, trt == "New")$scratch)/30))`$ we have strong evidence to reject the hypothesis that the two treatments are equally effective at reducing dog itchiness. We reject $H_0$ and conclude that dogs who received the new treatment are less itchy than dogs who receive the standard treatment. The new treatment is thus more effective at reducing the amount of irritation experienced by dogs treated with flea and tick medication.}
