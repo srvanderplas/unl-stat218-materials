@@ -784,9 +784,7 @@ bf <- tibble(
   status = rep(c("Breastfed", "Not Breastfed"), c(237, 85)),
   GCI = c(rnorm(237, 105.30, 14.5), rnorm(85, 100.90, 14))
 )
-stat <- bf %>% group_by(status) %>% summarize(GCI = mean(GCI)) %>%
-    summarize(GCI_diff = GCI[status == "Breastfed"] - GCI[status == "Not Breastfed"]) %>%
-  unlist()
+stat <- 105.30 - 100.90
 
 bf_sim <- purrr::map_df(1:1000, function(x) {
   bf %>%
